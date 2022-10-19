@@ -11,9 +11,9 @@
 using namespace My3dLib;
 
 const float Player::HIT_POINT = 100.0f;
-const float Player::DECREMENT_HIT_POINT = 5.0f;
+const float Player::DECREMENT_HIT_POINT = 15.0f;
 const float Player::COLLIDE_RADIUS = 50.0f;
-const float Player::NORMAL_SPEED = 5.0f;
+const float Player::NORMAL_SPEED = 8.0f;
 const float Player::DEFENSE_SPEED = 1.0f;
 const float Player::JUST_DEFENSE_TIME = 0.1f;
 const float Player::NORMAL_DEFENSE_TIME = 0.16f;
@@ -23,7 +23,6 @@ const float Player::GRAVITY = 1.0f;
 const float Player::FRICTION_FORCE = 0.1f;
 const float Player::TRUNK_POINT = 100.0f;
 const float Player::INCREASE_TRUNK_POINT = 5.0f;
-const float Player::RIGOR_TIME = 5.0f;
 const float Player::INVINCIBLE_TIME = 5.0f;
 const float Player::DEFENCE_INTERVAL = 0.5f;
 
@@ -91,7 +90,6 @@ void Player::Initialize()
 	MV1SetPosition(modelHandle, position);
 	MV1SetScale(modelHandle, VGet(0.5f, 0.5f, 0.5f));
 
-
 	//当たり判定球を設定
 	collisionSphere.localCenter = VGet(0.0f, 0.0f, 0.0f);
 	collisionSphere.radius = COLLIDE_RADIUS;
@@ -105,8 +103,8 @@ void Player::Initialize()
 /// </summary>
 void Player::Update()
 {
-	invincibleTime += DeltaTime::GetInstace().GetDeltaTime();
-	defenceInterval += DeltaTime::GetInstace().GetDeltaTime();
+	invincibleTime += DeltaTime::GetInstace().GetDeltaTime();			//無敵経過時間増加
+	defenceInterval += DeltaTime::GetInstace().GetDeltaTime();			//防御インターバル増加
 	if (pUpdate != nullptr)
 	{
 		(this->*pUpdate)();			//状態ごとの更新処理
@@ -140,6 +138,7 @@ void Player::Draw()
 
 	//デバッグ用
 	DrawFormatString(50, 210, GetColor(255, 255, 255), "Invincible : %f", this->GetInvincibleTime());
+	DrawFormatString(50, 230, GetColor(255, 255, 255), "HP : %f", hitPoint);
 
 	//当たり判定デバック描画
 	DrawSphere3D(collisionSphere.worldCenter, collisionSphere.radius,
@@ -148,28 +147,15 @@ void Player::Draw()
 
 }
 
+/// <summary>
+/// 無敵解除
+/// </summary>
 void Player::ReleaseInvincible()
 {
+	//無敵時間を超えたら描画する
 	if (invincibleTime > INVINCIBLE_TIME)
 	{
 		noDrawFrame = false;
-	}
-}
-
-/// <summary>
-/// //盾の耐久値が限界に達した
-/// </summary>
-void Player::BreakShield()
-{
-	float emplaceTime{0.0f};
-	emplaceTime += DeltaTime::GetInstace().GetDeltaTime();
-
-	//エフェクト再生
-
-	//一定時間経過すると解除する
-	if(emplaceTime >= RIGOR_TIME)
-	{ 
-		state = NORMAL;
 	}
 }
 
@@ -212,48 +198,31 @@ void Player::OnHitShield(const VECTOR& adjust)
 	//ガードしたタイミングによって後退させる量を変化させる
 	if (shield->GetDefenseCount() <= JUST_DEFENSE_TIME)
 	{
+		isJust = true;
 		//ジャストガードなら小さく後退させる
 		force = VScale(force, 3.0f);
-		//体幹ゲージを減らす
+		//体幹ゲージを増加させる
 		trunkPoint += INCREASE_TRUNK_POINT * 0.5;
 	}
 	else
 	{
 		//ジャストガードじゃないなら大きく後退させる
 		force = VScale(force, 8.0f);
-		//体幹ゲージを減らす
+		//体幹ゲージを増加させる
 		trunkPoint += INCREASE_TRUNK_POINT * 1.0f;
 	}
 
 	force.z = 0.0f;			//変な方向に動かないようにする
 
 	velocity = VAdd(velocity, force);
-	//耐久値が限界なら硬直状態に遷移させる
-	if (trunkPoint >= TRUNK_POINT)
-	{
-		state = RIGOR;
-		pUpdate = &Player::UpdateRigor;
-	}
-	else
-	{
-		state = SLIDE;
-		pUpdate = &Player::UpdateSlide;
-	}
-	
+	state = SLIDE;
+	pUpdate = &Player::UpdateSlide;
 }
 
-/// <summary>
-/// 盾とエネミーの弾が当たった
-/// </summary>
-/// <param name="adjust"></param>
 void Player::OnHitShieldWithBullet(const VECTOR& adjust)
 {
 }
 
-/// <summary>
-/// 生きているか
-/// </summary>
-/// <returns></returns>
 const bool Player::IsAlive() const
 {
 	//存在しないなら死んでいる状態にする
@@ -266,22 +235,6 @@ const bool Player::IsAlive() const
 	return true;
 }
 
-
-/// <summary>
-/// 接触できる状態か
-/// </summary>
-/// <returns></returns>
-//const bool Player::IsCollidableState() const
-//{
-//	//接触できる状態なら
-//	if (state == NORMAL ||
-//		state == DEFENSE)
-//	{
-//		return true;
-//	}
-//
-//	return false;
-//}
 
 /// <summary>
 /// Normal状態の更新処理
@@ -303,22 +256,26 @@ void Player::UpdateDefence()
 	Defense();
 }
 
+/// <summary>
+/// Slide状態の更新処理
+/// </summary>
 void Player::UpdateSlide()
 {
 	Defense();
 	Slide();
 }
 
+/// <summary>
+/// Damage状態の更新処理
+/// </summary>
 void Player::UpdateDamage()
 {
 	Damage();
 }
 
-void Player::UpdateRigor()
-{
-	BreakShield();
-}
-
+/// <summary>
+/// 移動処理
+/// </summary>
 void Player::Move()
 {
 	if (!VSquareSize(inputDirection) == 0.0f)
@@ -333,6 +290,9 @@ void Player::Move()
 	nextPosition = VAdd(position, VScale(nextDirction, speed));
 }
 
+/// <summary>
+/// 移動完了処理
+/// </summary>
 void Player::MoveFinish()
 {
 	//前フレームの位置を更新
@@ -352,11 +312,17 @@ void Player::MoveFinish()
 	}
 }
 
+/// <summary>
+/// ジャンプ関数（いずれ実装）
+/// </summary>
 void Player::Jump()
 {
 	
 }
 
+/// <summary>
+/// 防御処理
+/// </summary>
 void Player::Defense()
 {
 	if (shield != nullptr)
@@ -390,6 +356,7 @@ void Player::Slide()
 	//止まったら通常状態に戻る
 	if (VSquareSize(velocity) <= STOP_VELOCITY)
 	{
+		isJust = false;						//ジャストガード結果を解除
 		velocity = ZERO_VECTOR;
 		state = NORMAL;
 		pUpdate = &Player::UpdateNormal;
@@ -422,6 +389,9 @@ void Player::Damage()
 	}
 }
 
+/// <summary>
+/// 入力処理
+/// </summary>
 void Player::InputAction()
 {
 	inputDirection = ZERO_VECTOR;
@@ -462,6 +432,9 @@ void Player::InputAction()
 	
 }
 
+/// <summary>
+/// 盾生成
+/// </summary>
 void Player::CreateShield()
 {
 	if (shield == nullptr)

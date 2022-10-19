@@ -35,12 +35,14 @@ public:
 
 	virtual void Update() = 0;
 	virtual void Draw() = 0;
-
-	virtual void OnHitOtherCharacter(const VECTOR& forceDirection) = 0;		//他のキャラクターと当たった
-	virtual void OnHitShield(const VECTOR& adjust) = 0;						//盾とキャラクターが当たった
-	virtual void OnHitShieldWithBullet(const VECTOR& adjust) = 0;								//盾と弾が接触した
 	void MoveFinish();				//移動予定地に実際に移動する
 
+	//当たり判定関係関数
+	virtual void OnHitOtherCharacter(const VECTOR& forceDirection) = 0;		//他のキャラクターと当たった
+	virtual void OnHitShield(const VECTOR& adjust) = 0;						//盾とキャラクターが当たった
+	virtual void OnHitShieldWithBullet(const VECTOR& adjust) = 0;			//盾と弾が接触した
+
+	//ゲッター
 	const float& GetHitPoint() const { return hitPoint; }							//現在のhitPointを返す
 	const VECTOR& GetNextPosition() const  { return nextPosition; }					//移動予定位置を返す
 	const VECTOR GetCollisionShere() const { return collisionSphere.worldCenter; }	//当たり判定球を返す
@@ -53,8 +55,8 @@ public:
 	Bullet* GetBulletPointer() const { return bullet; }
 
 	//デバッグ用
-	const VECTOR& GetVelocity() const { return velocity; }		// 現在の速度、加速度、向き
-	const float& GetTrunkPoint() const { return trunkPoint; }
+	const VECTOR& GetVelocity() const { return velocity; }		// 現在の速度、加速度、向きを返す
+	const float& GetTrunkPoint() const { return trunkPoint; }	// 現在の体幹ゲージを返す
 
 protected:
 	VECTOR inputDirection;

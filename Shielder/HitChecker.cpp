@@ -36,6 +36,7 @@ void HitChecker::Check(Character** character, Shield *shield, Bullet* bullet)
 /// <param name="shield"></param>
 void HitChecker::ShieldAndCharacter(Character** character, Shield *shield)
 {
+	//防御していなければ処理しない
 	if (shield != nullptr)
 	{
 		VECTOR shieldPos = character[0]->GetPosition();
@@ -59,7 +60,7 @@ void HitChecker::ShieldAndCharacter(Character** character, Shield *shield)
 			VECTOR forceDirection = VNorm(sub);
 			character[0]->OnHitShield(forceDirection);
 			character[1]->OnHitShield(forceDirection);
-			WaitTimer(hitStopTime);
+			WaitTimer(hitStopTime);					//ヒットストップ
 		}
 	}
 }
@@ -70,17 +71,6 @@ void HitChecker::ShieldAndCharacter(Character** character, Shield *shield)
 /// <param name="character"></param>
 void HitChecker::CharacterAndCharacter(Character** character)
 {
-	//プレイヤーが接触可能なら
-	//if (character[0]->IsCollidableState() == false)
-	//{
-	//	return;
-	//}
-	////エネミーが接触可能なら
-	//if (character[1]->IsCollidableState() == false)
-	//{
-	//	return;
-	//}
-
 	VECTOR characterPos = character[0]->GetPosition();
 	characterPos.y = 0.0f;
 
@@ -96,14 +86,11 @@ void HitChecker::CharacterAndCharacter(Character** character)
 		character[1]->GetPosition(), character[1]->GetCollisionRadius()) &&
 		character[0]->IsCollidableState())
 	{
-		//printfDx("Hit");
 		sub = VScale(sub, 1.0f);		//吹き飛ばす方向は逆方向
 		VECTOR forceDirection = VNorm(sub);
 		character[0]->OnHitOtherCharacter(forceDirection);
 		character[1]->OnHitOtherCharacter(forceDirection);
-		WaitTimer(hitStopTime);
-		//跳ね返させる
-		//character[0]->OnHitOtherCharacter();
+		WaitTimer(hitStopTime);			//ヒットストップ
 	}
 }
 
@@ -129,14 +116,14 @@ void HitChecker::ShieldAndBullet(Character** character, Shield* shield, Bullet* 
 
 		if (HitCheck_Sphere_Sphere(shield->GetPosition(), shield->GetCollisionRadius(),
 			bullet->GetPosition(), bullet->GetCollisionRadius()) &&
-			character[0]->IsCollidableState())
+			character[0]->IsCollidableState() && bullet->IsCollidableState())
 		{
 			sub = VScale(sub, 1.0f);		//吹き飛ばす方向は逆方向
 			VECTOR forceDirection = VNorm(sub);
 			character[0]->OnHitShield(forceDirection);
 			character[1]->OnHitShieldWithBullet(forceDirection);
 			bullet->OnHitBreak();
-			WaitTimer(hitStopTime);
+			WaitTimer(hitStopTime);				//ヒットストップ
 		}
 	}
 }
@@ -163,13 +150,13 @@ void HitChecker::CharacterAndBullet(Character** character, Bullet* bullet)
 
 		if (HitCheck_Sphere_Sphere(character[0]->GetPosition(), character[0]->GetCollisionRadius(),
 			bullet->GetPosition(), bullet->GetCollisionRadius()) &&
-			character[0]->IsCollidableState())
+			character[0]->IsCollidableState() && bullet->IsCollidableState())
 		{
 			sub = VScale(sub, 1.0f);		//吹き飛ばす方向は逆方向
 			VECTOR forceDirection = VNorm(sub);
 			character[0]->OnHitOtherCharacter(forceDirection);
 			bullet->OnHitBreak();
-			WaitTimer(hitStopTime);
+			WaitTimer(hitStopTime);			//ヒットストップ
 		}
 	}
 }

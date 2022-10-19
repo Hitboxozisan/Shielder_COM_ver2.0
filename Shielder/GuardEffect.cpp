@@ -15,7 +15,7 @@ GuardEffect::~GuardEffect()
 
 void GuardEffect::Initialize()
 {
-	effectHandle = LoadEffekseerEffect("Data/Effect/Laser01.efkefc", 1.0f);
+	effectHandle = LoadEffekseerEffect("Data/Effect/Blow.efkefc", 1.0f);
 	if (effectHandle == -1)
 	{
 		printfDx("ì«Ç›çûÇ›Ç…é∏îs_GuardEffect");
@@ -26,6 +26,7 @@ void GuardEffect::Activate(VECTOR inPosition)
 {
 	position = inPosition;
 	SetPosPlayingEffekseer3DEffect(effectHandle, position.x, position.y, position.z);
+	playEffectHandle = PlayEffekseer3DEffect(effectHandle);
 }
 
 void GuardEffect::Deactivate()
@@ -36,8 +37,7 @@ void GuardEffect::Deactivate()
 
 void GuardEffect::Update()
 {
-	playEffectHandle = PlayEffekseer3DEffect(effectHandle);
-	//UpdateEffekseer3D();
+	UpdateEffekseer3D();
 }
 
 

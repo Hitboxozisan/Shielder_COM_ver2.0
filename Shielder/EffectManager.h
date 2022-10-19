@@ -2,6 +2,11 @@
 class EffectManager final
 {
 public:
+	enum Effects
+	{
+
+	};
+
 	EffectManager();
 	~EffectManager();
 
@@ -18,6 +23,6 @@ private:
 	EffectManager(const EffectManager&);
 	void operator=(const EffectManager&);
 
-	EffectBase** effects;
+	EffectBase* effects;
 };
 

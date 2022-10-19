@@ -62,8 +62,10 @@ void UiManager::Draw(GameMain::State state, float characterHp, float playerTrunk
 		TrunkGaugeDraw(playerTrunk, enemyTrunk);
 		break;
 	case GameMain::GAME_OVER:
+
 		break;
 	case GameMain::RESULT:
+
 		break;
 	default:
 		break;
@@ -102,7 +104,7 @@ void UiManager::PlayerHpDraw(float characterHp)
 	//DrawGraphF(50, 300, imageHandle[PLAYER_HP], TRUE);
 
 	//体力ゲージ表示
-	DrawBox(20, 445, 40 + 100 * characterHp/playerMaxHp, 450, GetColor(0, 255, 0), TRUE);
+	DrawBox(20, 445, (40 + 100) * characterHp/playerMaxHp, 450, GetColor(0, 255, 0), TRUE);
 	//体力ゲージ枠
 	DrawRotaGraph(80, 445, 0.2, 0.0, imageHandle[PLAYER_HP], TRUE);
 }

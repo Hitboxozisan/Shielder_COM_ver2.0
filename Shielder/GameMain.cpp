@@ -105,7 +105,7 @@ void GameMain::Activate()
 		character[i]->Initialize();
 	}
 
-	guardEffect->Activate(character[1]->GetPosition());
+	guardEffect->Activate(character[0]->GetPosition());
 
 	state = START;
 	pUpdate = &GameMain::UpdateStart;
@@ -140,6 +140,8 @@ void GameMain::Update()
 		(this->*pUpdate)();	//状態ごとの更新処理
 	}
 
+	guardEffect->Update();
+
 	++frame;
 }
 
@@ -159,7 +161,6 @@ void GameMain::Draw()
 	}
 
 	guardEffect->Draw();
-
 
 	//UIデバッグ
 	DrawFormatString(50, 70, GetColor(255, 255, 255), "P::position.x : %f", character[0]->GetPosition().x);
