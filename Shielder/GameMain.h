@@ -52,7 +52,8 @@ private:
 	Background* background;
 	HitChecker* hitchecker;
 	BulletCreater* bulletCreater;
-	GuardEffect* guardEffect;
+	//GuardEffect* guardEffect;
+	EffectManager* effectManager;
 	UiManager* uiManager;
 
 	std::list<Bullet*> activeBullet;

@@ -1,5 +1,6 @@
 #include "Pch.h"
 
+#include "GuardEffect.h"
 
 #include "ModelManager.h"
 #include "KeyManager.h"
@@ -19,6 +20,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ChangeWindowMode(IS_WINDOW_MODE);
 	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16);
 
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	SetUseDirect3DVersion(DX_DIRECT3D_11);
+
 	if (DxLib_Init() == -1)
 	{
 		return -1;
@@ -26,7 +31,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//Effekseerを初期化する
 	//引数は画面に表示する最大パーティクル数
-	if (Effekseer_Init(8000) == -1)
+	if (Effekseer_Init(3000) == -1)
 	{
 		DxLib_End();
 		return -1;
@@ -40,6 +45,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// ウインドウとフルスクリーンの切り替えが発生する場合は必ず実行する。
 	// ただし、DirectX11を使用する場合は実行する必要はない。
 	Effekseer_SetGraphicsDeviceLostCallbackFunctions();
+
+	// Effekseerに2D描画の設定をする。
+	//Effekseer_Set2DSetting(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// Zバッファを有効にする。
 	// Effekseerを使用する場合、2DゲームでもZバッファを使用する。
@@ -70,7 +78,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		
 		//画面更新処理
 		ClearDrawScreen();
-		//UpdateEffekseer3D();
+	
 
 		sceneManager->Draw();					//各シーンに応じた描画処理
 

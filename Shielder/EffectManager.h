@@ -1,10 +1,15 @@
 #pragma once
+
+#include <string>
+
 class EffectManager final
 {
 public:
 	enum Effects
 	{
+		SPARK,				//スパーク
 
+		EFFECT_AMOUNT		//エフェクトの総数
 	};
 
 	EffectManager();
@@ -12,17 +17,19 @@ public:
 
 	void Initialize();
 	void Finalize();
-	void Activate();
+	void Activate(VECTOR inPosition);
 	void Deactivate();
 	void Update();
 	void Draw();
 
-	void CreateGuardEffect(const VECTOR& inPosition);
+	void CreateSparkEffect(const VECTOR& inPosition);
 
 private:
 	EffectManager(const EffectManager&);
 	void operator=(const EffectManager&);
 
-	EffectBase* effects;
+	static const std::string SPARK_EFFECT_PATH;
+
+	EffectBase** effects;
 };
 

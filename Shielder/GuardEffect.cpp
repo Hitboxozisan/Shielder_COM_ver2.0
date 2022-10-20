@@ -1,11 +1,7 @@
 #include "Pch.h"
-#include "EffekseerForDXLib.h"
 #include "GuardEffect.h"
 
 GuardEffect::GuardEffect()
-	:effectHandle()
-	,position()
-	,playEffectHandle()
 {
 }
 
@@ -15,18 +11,21 @@ GuardEffect::~GuardEffect()
 
 void GuardEffect::Initialize()
 {
-	effectHandle = LoadEffekseerEffect("Data/Effect/Blow.efkefc", 1.0f);
+	effectHandle = LoadEffekseerEffect("Data/Effect/Blow.efkefc", 20.0f);
 	if (effectHandle == -1)
 	{
 		printfDx("ì«Ç›çûÇ›Ç…é∏îs_GuardEffect");
 	}
+	
 }
 
 void GuardEffect::Activate(VECTOR inPosition)
 {
 	position = inPosition;
-	SetPosPlayingEffekseer3DEffect(effectHandle, position.x, position.y, position.z);
-	playEffectHandle = PlayEffekseer3DEffect(effectHandle);
+	//position = VGet(320.0f, 300.0f, 100.0f);
+	position.y = 0.0f;
+	position.z = 0.0f;
+	playingEffectHandle = -1;
 }
 
 void GuardEffect::Deactivate()
@@ -37,11 +36,18 @@ void GuardEffect::Deactivate()
 
 void GuardEffect::Update()
 {
-	UpdateEffekseer3D();
+	frame++;
+	if (static_cast<int>(frame) % 60 == 0)
+	{
+		playingEffectHandle = PlayEffekseer3DEffect(effectHandle);
+	}
+	SetPosPlayingEffekseer3DEffect(playingEffectHandle, position.x, position.y, position.z);
 }
 
 
 void GuardEffect::Draw()
 {
+	UpdateEffekseer3D();
 	DrawEffekseer3D();
 }
+	

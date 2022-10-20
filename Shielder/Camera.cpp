@@ -65,7 +65,8 @@ void Camera::SetPosition(Character** character)
 	
 	// カメラの設定に反映する
 	SetCameraPositionAndTarget_UpVecY(position, targetPosition);
-
+	//DXライブラリのカメラとEffekseerのカメラを同期する
+	Effekseer_Sync3DSetting();
 	
 
 	//setcamerapositionandangle()		//使うとよい
@@ -93,8 +94,7 @@ void Camera::Update(Character** character)
 		position.z -= 1;
 	}
 	
-	//DXライブラリのカメラとEffekseerのカメラを同期する
-	Effekseer_Sync3DSetting();
+	
 
 	//SetCameraPositionAndAngle(position, 0, 0, 0);
 }

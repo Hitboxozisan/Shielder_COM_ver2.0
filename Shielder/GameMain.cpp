@@ -14,6 +14,7 @@
 #include "BulletCreater.h"
 #include "Background.h"
 #include "UiManager.h"
+#include "EffectManager.h"
 #include "GuardEffect.h"
 
 const int	GameMain::PLAYER_AMOUNT = 1;
@@ -75,15 +76,18 @@ void GameMain::Initialize()
 	background = new Background;
 	background->Initialize();
 
+	//エフェクトクラス
+	effectManager = new EffectManager();
+	//guardEffect = new GuardEffect();
+	//guardEffect->Initialize();
+
 	uiManager = new UiManager;
 	uiManager->Initialize();
 
 	//当たり判定クラス
 	hitchecker = new HitChecker(CHARACTER_AMOUNT);
 
-	//エフェクトクラス
-	guardEffect = new GuardEffect();
-	guardEffect->Initialize();
+	
 
 }
 
@@ -94,8 +98,6 @@ void GameMain::Finalize()
 		character[i]->Finalize();
 		SafeDelete(character[i]);
 	}
-
-
 }
 
 void GameMain::Activate()
@@ -105,7 +107,8 @@ void GameMain::Activate()
 		character[i]->Initialize();
 	}
 
-	guardEffect->Activate(character[0]->GetPosition());
+	effectManager;
+	//guardEffect->Activate(character[0]->GetPosition());
 
 	state = START;
 	pUpdate = &GameMain::UpdateStart;

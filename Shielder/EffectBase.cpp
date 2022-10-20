@@ -17,7 +17,7 @@ void EffectBase::Finalize()
 {
 }
 
-void EffectBase::Activate()
+void EffectBase::Activate(VECTOR inPosition)
 {
 }
 
@@ -31,4 +31,9 @@ void EffectBase::Update()
 
 void EffectBase::Draw()
 {
+}
+
+bool EffectBase::GetExist() const
+{
+	return exist;
 }
