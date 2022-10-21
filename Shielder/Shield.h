@@ -22,9 +22,9 @@ public:
 	void Create();
 	void Activate(const VECTOR& inPosition, const VECTOR& inDirection, const VECTOR& inPrevDirection);
 	void Deactivate();
-	void Initialize(const VECTOR& inDirection);
+	void Initialize();
 	void Finalize();
-	void Update();
+	void Update(const VECTOR& inPosition, const VECTOR& inDirection, const VECTOR& inPrevDirection);
 	void Draw();
 
 	void DecrementTrunk();

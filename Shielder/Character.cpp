@@ -78,7 +78,11 @@ void Character::MoveFinish()
 	MV1SetRotationYUseDir(modelHandle, direction, 0.0f);*/
 
 	prevPosition = position;
-	prevDirection = direction;
+	//移動しているなら前フレームの向きを更新する
+	if (direction.x != 0.0f)
+	{
+		prevDirection = direction;
+	}
 	position = nextPosition;
 	direction = nextDirction;
 

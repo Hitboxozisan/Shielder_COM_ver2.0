@@ -37,7 +37,7 @@ void HitChecker::Check(Character** character, Shield *shield, Bullet* bullet)
 void HitChecker::ShieldAndCharacter(Character** character, Shield *shield)
 {
 	//–hŒä‚µ‚Ä‚¢‚È‚¯‚ê‚Îˆ—‚µ‚È‚¢
-	if (shield != nullptr)
+	if (shield->GetState() != ShieldState::NONE)
 	{
 		VECTOR shieldPos = character[0]->GetPosition();
 		shieldPos.y = 0.0f;
@@ -101,7 +101,8 @@ void HitChecker::CharacterAndCharacter(Character** character)
 /// <param name="bullet"></param>
 void HitChecker::ShieldAndBullet(Character** character, Shield* shield, Bullet* bullet)
 {
-	if (shield != nullptr && bullet != nullptr)
+	//–hŒä‚µ‚Ä‚¢‚é‚©‚Â’e‚ª‘¶Ý‚µ‚Ä‚¢‚é‚È‚çˆ—‚·‚é
+	if (shield->GetState() != ShieldState::NONE && bullet != nullptr)
 	{
 		VECTOR shieldPos = character[0]->GetPosition();
 		shieldPos.y = 0.0f;

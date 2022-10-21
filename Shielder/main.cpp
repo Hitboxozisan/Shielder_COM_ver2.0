@@ -20,6 +20,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	ChangeWindowMode(IS_WINDOW_MODE);
 	SetGraphMode(SCREEN_WIDTH, SCREEN_HEIGHT, 16);
 
+	SetUseLighting(TRUE);
+
 	SetDrawScreen(DX_SCREEN_BACK);
 
 	SetUseDirect3DVersion(DX_DIRECT3D_11);
@@ -31,7 +33,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	//Effekseerを初期化する
 	//引数は画面に表示する最大パーティクル数
-	if (Effekseer_Init(3000) == -1)
+	if (Effekseer_Init(2200) == -1)
 	{
 		DxLib_End();
 		return -1;

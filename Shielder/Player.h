@@ -15,6 +15,7 @@ public:
 		DEFENSE,	//防御
 		SLIDE,		//防御時に接触
 		DAMAGE,		//被弾
+		RIGOR,		//硬直
 		DEAD		//死亡
 	};
 	
@@ -35,7 +36,6 @@ public:
 
 	//ゲッター
 	const State GetState() const { return state; }
-	const bool IsDefense()const { return isDefense; }
 	const float GetTrunk() const { return trunkPoint; }
 	const bool IsAlive() const;
 	const bool IsJust() const { return isJust; };
@@ -71,8 +71,6 @@ private:
 	float justDefenceTime;			//ジャストガードと判断する時間
 	float normalDefenceTime;		//ノーマルガードと判断する時間
 	
-
-	bool isDefense;					//防御しているか
 	bool isJust;					//ジャストガードか
 
 	void (Player::* pUpdate)();		//Update関数ポインタ
@@ -84,6 +82,7 @@ private:
 	void UpdateDefence();
 	void UpdateSlide();
 	void UpdateDamage();
+	void UpdateRigor();
 
 
 	void Move();
@@ -91,7 +90,8 @@ private:
 	void Jump();
 	void Defense();
 	void Slide();		//ジャストガード以外で接触
-	void Damage();
+	void Damage();		//被弾
+	void Rigor();		//硬直
 	void InputAction();
 	void CreateShield();
 };

@@ -81,7 +81,7 @@ void GameMain::Initialize()
 	background->Initialize();
 
 	
-
+	//UIŠÇ—ƒNƒ‰ƒX
 	uiManager = new UiManager;
 	uiManager->Initialize();
 
@@ -150,6 +150,7 @@ void GameMain::Draw()
 	background->Draw();		//”wŒi•`‰æ
 	uiManager->Draw(state, character[0]->GetHitPoint(), character[0]->GetTrunkPoint(), character[1]->GetTrunkPoint());
 
+	
 	for (auto itr = activeBullet.begin(); itr != activeBullet.end(); ++itr)
 	{
 		(*itr)->Draw();

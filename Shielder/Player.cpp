@@ -35,7 +35,6 @@ Player::Player(BulletCreater* const inBulletCreater)
 	,defenceInterval(0.0f)
 	,justDefenceTime()
 	,normalDefenceTime()
-	,isDefense()
 	,pUpdate(nullptr)
 {
 }
@@ -73,7 +72,6 @@ void Player::Initialize(EffectManager* const inEffectManager)
 	direction = ZERO_VECTOR;
 	nextDirction = direction;
 	
-	isDefense = false;
 	noDrawFrame = false;
 
 	hitPoint = HIT_POINT;
@@ -95,8 +93,12 @@ void Player::Initialize(EffectManager* const inEffectManager)
 	collisionSphere.radius = COLLIDE_RADIUS;
 	collisionSphere.worldCenter = position;
 
-	shield = nullptr;
+	//盾を初期化する
+	shield = new Shield;
+	shield->Initialize();
 	
+	//shield = nullptr;
+
 	effectManager = inEffectManager;
 }
 
@@ -132,7 +134,7 @@ void Player::Draw()
 	}
 
 	MV1DrawModel(modelHandle);			//3Dモデルの描画
-	if (shield != nullptr)
+	if (shield->GetState() != NONE)
 	{
 		shield->Draw();					//盾の描画
 		DrawFormatString(50, 50, GetColor(255, 255, 255), "DefenseCount : %f", shield->GetDefenseCount(), TRUE);
@@ -141,6 +143,8 @@ void Player::Draw()
 	//デバッグ用
 	DrawFormatString(50, 210, GetColor(255, 255, 255), "Invincible : %f", this->GetInvincibleTime());
 	DrawFormatString(50, 230, GetColor(255, 255, 255), "HP : %f", hitPoint);
+	DrawFormatString(50, 250, GetColor(255, 255, 255), "Dir : %f", direction.x);
+	DrawFormatString(50, 270, GetColor(255, 255, 255), "PDir : %f", prevDirection.x);
 
 	//当たり判定デバック描画
 	DrawSphere3D(collisionSphere.worldCenter, collisionSphere.radius,
@@ -203,7 +207,7 @@ void Player::OnHitShield(const VECTOR& adjust)
 	{
 		isJust = true;
 		//ジャストガードなら小さく後退させる
-		force = VScale(force, 3.0f);
+		force = VScale(force, 5.0f);
 		//体幹ゲージを増加させる
 		trunkPoint += INCREASE_TRUNK_POINT * 0.5;
 	}
@@ -276,6 +280,11 @@ void Player::UpdateDamage()
 	Damage();
 }
 
+void Player::UpdateRigor()
+{
+	Rigor();
+}
+
 /// <summary>
 /// 移動処理
 /// </summary>
@@ -298,21 +307,24 @@ void Player::Move()
 /// </summary>
 void Player::MoveFinish()
 {
-	//前フレームの位置を更新
-	prevPosition = position;
-	//前フレームの向きを更新
-	prevDirection = direction;
-	position = nextPosition;
-	direction = nextDirction;
+	////前フレームの位置を更新
+	//prevPosition = position;
+	////移動しているなら前フレームの向きを更新
+	//if (direction.x != 0.0f)
+	//{
+	//	prevDirection = direction;
+	//}
+	//position = nextPosition;
+	//direction = nextDirction;
 
 	//位置を設定
-	MV1SetPosition(modelHandle, position);
-	
-	//移動キーを押していない場合は向きを固定する
-	if (!VSquareSize(inputDirection) == 0.0f)
-	{
-		MV1SetRotationYUseDir(modelHandle, direction, 0.0f);
-	}
+	//MV1SetPosition(modelHandle, position);
+	//
+	////移動キーを押していない場合は向きを固定する
+	//if (!VSquareSize(inputDirection) == 0.0f)
+	//{
+	//	MV1SetRotationYUseDir(modelHandle, direction, 0.0f);
+	//}
 }
 
 /// <summary>
@@ -328,12 +340,9 @@ void Player::Jump()
 /// </summary>
 void Player::Defense()
 {
-	if (shield != nullptr)
+	if (shield->GetState() != ShieldState::NONE)
 	{
-		//盾を生成
-		shield->Activate(position, direction, prevDirection);
-		shield->Update();
-		shield->OnHitOtherCharacter();
+		shield->Update(position, direction, prevDirection);
 	}
 }
 
@@ -393,6 +402,16 @@ void Player::Damage()
 }
 
 /// <summary>
+/// 硬直状態
+/// </summary>
+void Player::Rigor()
+{
+	//エフェクトを再生
+	
+
+}
+
+/// <summary>
 /// 入力処理
 /// </summary>
 void Player::InputAction()
@@ -418,7 +437,7 @@ void Player::InputAction()
 	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_LSHIFT))
 	{
 		speed = DEFENSE_SPEED;
-		isDefense = true;		//防御
+		//isDefense = true;		//防御
 		CreateShield();
 
 		pUpdate = &Player::UpdateDefence;
@@ -426,10 +445,10 @@ void Player::InputAction()
 	else
 	{
 		speed = NORMAL_SPEED;
-		isDefense = false;
+		//isDefense = false;
 
 		pUpdate = &Player::UpdateNormal;
-		shield = nullptr;			//盾を消滅させる
+		shield->Deactivate();			//盾を消滅させる
 	}
 
 	
@@ -440,10 +459,6 @@ void Player::InputAction()
 /// </summary>
 void Player::CreateShield()
 {
-	if (shield == nullptr)
-	{
-		shield = new Shield;
-		shield->Initialize(prevDirection);
-		state = DEFENSE;
-	}
+	shield->Activate(position, direction, prevDirection);		//盾を生成する
+	state = DEFENSE;	
 }

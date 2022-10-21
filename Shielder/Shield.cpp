@@ -44,21 +44,27 @@ void Shield::Create()
 void Shield::Activate(const VECTOR& inPosition, const VECTOR& inDirection, const VECTOR& inPrevDirection)
 {
 	state = DEPLOYMENT;
+	defenseCount = 0.0f;
 	position = inPosition;				//盾の位置を設定
 	direction = inDirection;			
 	prevDirection = inPrevDirection;
 	
+
 	//プレイヤーの前方に設置
-	if (VSquareSize(direction) != 0.0f)
+	if (VSquareSize(prevDirection) != 0.0f)
 	{
-		DistanceToPlyaer = VScale(direction, SCALE_BY_DIRECTION_FOR_CORRECTION);
+		DistanceToPlyaer = VScale(prevDirection, SCALE_BY_DIRECTION_FOR_CORRECTION);
 	}
-	else 
+	else
 	{
 		//DistanceToPlyaer = VScale(prevDirection, SCALE_BY_DIRECTION_FOR_CORRECTION);
 	}
 
-	position = VAdd(position, DistanceToPlyaer);
+	if (VSquareSize(prevDirection) != 0.0f)
+	{
+		MV1SetRotationYUseDir(modelHandle, prevDirection, 0.0f);
+	}
+	
 }
 
 void Shield::Deactivate()
@@ -66,7 +72,7 @@ void Shield::Deactivate()
 	state = NONE;
 }
 
-void Shield::Initialize(const VECTOR& inPrevDirection)
+void Shield::Initialize()
 {
 	defenseCount = 0.0f;
 
@@ -79,7 +85,6 @@ void Shield::Initialize(const VECTOR& inPrevDirection)
 
 	MV1SetScale(modelHandle, VGet(0.5f, 0.5f, 0.5f));
 
-	
 	collisionSphere.localCenter = ZERO_VECTOR;
 	collisionSphere.radius = COLLISION_SHIELD_RADIUS;
 	collisionSphere.worldCenter = position;
@@ -94,14 +99,20 @@ void Shield::Finalize()
 }
 
 
-void Shield::Update()
+void Shield::Update(const VECTOR& inPosition, const VECTOR& inDirection, const VECTOR& inPrevDirection)
 {
 	if (state == NONE)
 	{
 		return;
 	}
-	
+
 	defenseCount += DeltaTime::GetInstace().GetDeltaTime();
+
+	//位置を設定
+	position = inPosition;
+	direction = inDirection;
+
+	position = VAdd(position, DistanceToPlyaer);
 
 	////プレイヤーの前方に設置
 	//VECTOR DistanceToPlyaer = VScale(direction, SCALE_BY_DIRECTION_FOR_CORRECTION);
@@ -109,10 +120,7 @@ void Shield::Update()
 
 	MV1SetPosition(modelHandle, position);
 	
-	if (VSquareSize(direction) != 0.0f)
-	{
-		MV1SetRotationYUseDir(modelHandle, direction, 0.0f);
-	}
+	
 	collisionSphere.Move(position);
 
 	//敵との当たり判定
