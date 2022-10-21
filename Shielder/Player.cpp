@@ -3,7 +3,7 @@
 
 #include "Shield.h"
 
-
+#include "EffectManager.h"
 #include "ModelManager.h"
 #include "KeyManager.h"
 #include "DeltaTime.h"
@@ -55,7 +55,7 @@ Player::~Player()
 /// <summary>
 /// 初期化処理
 /// </summary>
-void Player::Initialize()
+void Player::Initialize(EffectManager* const inEffectManager)
 {
 	//モデルの読み込み
 	modelHandle = MV1DuplicateModel(ModelManager::GetInstance().GetModelHandle(ModelManager::PLAYER));
@@ -96,6 +96,8 @@ void Player::Initialize()
 	collisionSphere.worldCenter = position;
 
 	shield = nullptr;
+	
+	effectManager = inEffectManager;
 }
 
 /// <summary>
@@ -194,6 +196,7 @@ void Player::OnHitShield(const VECTOR& adjust)
 	VECTOR force = adjust;
 	force.y = 0.0f;			//変な方向に動かないようにする
 	
+	effectManager->CreateSparkEffect(position);
 
 	//ガードしたタイミングによって後退させる量を変化させる
 	if (shield->GetDefenseCount() <= JUST_DEFENSE_TIME)

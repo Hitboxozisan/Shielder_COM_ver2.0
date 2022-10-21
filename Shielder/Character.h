@@ -7,6 +7,7 @@ using namespace My3dLib;
 class Shield;
 class Bullet;
 class BulletCreater;
+class EffectManager;
 
 //èÛë‘
 //namespace CharacterState
@@ -30,7 +31,7 @@ public:
 	Character(BulletCreater* const);
 	virtual ~Character();
 
-	virtual void Initialize();
+	virtual void Initialize(EffectManager* const inEffectManager) = 0;
 	void Finalize();
 
 	virtual void Update() = 0;

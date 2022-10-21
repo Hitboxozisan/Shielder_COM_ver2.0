@@ -2,6 +2,12 @@
 #include "EffectBase.h"
 
 EffectBase::EffectBase()
+	:effectHandle()
+	,playingEffectHandle()
+	,position()
+	,frame()
+	,exist(false)
+	,existFrame()
 {
 }
 

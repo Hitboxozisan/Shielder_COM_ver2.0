@@ -9,10 +9,12 @@ public:
 	~GuardEffect();
 	
 	void Initialize();
+	void Finalize();
 	void Activate(VECTOR inPosition);
 	void Deactivate();
 	void Update();
 	void Draw();
+
 
 private:
 	//GuardEffect();

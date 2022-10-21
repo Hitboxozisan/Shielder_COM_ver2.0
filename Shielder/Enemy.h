@@ -39,7 +39,7 @@ public:
 
 	Enemy(BulletCreater* const);
 	~Enemy();
-	void Initialize();
+	void Initialize(EffectManager* const inEffectManager);
 	void Update();
 
 	void Draw();

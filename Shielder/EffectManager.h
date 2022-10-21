@@ -1,5 +1,6 @@
 #pragma once
 
+#include "EffectBase.h"
 #include <string>
 
 class EffectManager final
@@ -30,6 +31,6 @@ private:
 
 	static const std::string SPARK_EFFECT_PATH;
 
-	EffectBase** effects;
+	EffectBase* effects[EFFECT_AMOUNT];
 };
 

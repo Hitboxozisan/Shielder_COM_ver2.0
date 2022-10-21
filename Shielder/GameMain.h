@@ -11,6 +11,7 @@ class HitChecker;
 class Bullet;
 class BulletCreater;
 class Background;
+class EffectManager;
 class GuardEffect;
 class UiManager;
 
@@ -52,7 +53,7 @@ private:
 	Background* background;
 	HitChecker* hitchecker;
 	BulletCreater* bulletCreater;
-	//GuardEffect* guardEffect;
+	GuardEffect* guardEffect;
 	EffectManager* effectManager;
 	UiManager* uiManager;
 

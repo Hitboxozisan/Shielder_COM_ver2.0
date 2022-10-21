@@ -30,7 +30,7 @@ Character::~Character()
 	}
 }
 
-void Character::Initialize()
+void Character::Initialize(EffectManager* const inEffectManager)
 {
 	
 }

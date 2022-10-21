@@ -3,6 +3,7 @@
 #include "Character.h"
 
 class Shield;
+class EffectManager;
 
 class Player final : public Character
 {
@@ -20,7 +21,7 @@ public:
 	Player(BulletCreater* const);
 	~Player();
 
-	void Initialize();
+	void Initialize(EffectManager* const inEffectManager);
 	void Update();
 
 	void Draw();
@@ -64,6 +65,7 @@ private:
 	static const float DEFENCE_INTERVAL;					//次に防御できるまでの時間
 
 	State state;
+	EffectManager* effectManager;
 
 	float defenceInterval;			//盾を展開してからの経過時間
 	float justDefenceTime;			//ジャストガードと判断する時間

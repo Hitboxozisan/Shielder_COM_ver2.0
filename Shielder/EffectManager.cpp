@@ -1,6 +1,6 @@
 #include "Pch.h"
 
-#include "EffectBase.h"
+//#include "EffectBase.h"
 #include "EffectManager.h"
 #include "GuardEffect.h"
 
@@ -20,8 +20,6 @@ void EffectManager::Initialize()
 	/*GuardEffect* sparkEffect = new GuardEffect;
 	sparkEffect->Initialize();*/
 
-	effects = new EffectBase*[EFFECT_AMOUNT]();
-
 	effects[0] = new GuardEffect();
 	effects[0]->Initialize();
 }
@@ -31,6 +29,7 @@ void EffectManager::Finalize()
 	for (int i = 0; i < EFFECT_AMOUNT; ++i)
 	{
 		effects[i]->Finalize();
+		SafeDelete(effects[i]);
 	}
 }
 

@@ -5,12 +5,12 @@ public:
 	EffectBase();
 	virtual ~EffectBase();
 
-	void Initialize();
-	void Finalize();
+	virtual void Initialize() = 0;
+	virtual void Finalize() = 0;
 	virtual void Activate(VECTOR inPosition) = 0;
-	void Deactivate();
-	void Update();
-	void Draw();
+	virtual void Deactivate() = 0;
+	virtual void Update() = 0;
+	virtual void Draw() = 0;
 
 	bool GetExist() const;			//ë∂ç›ÇµÇƒÇ¢ÇÈÇ©Ç«Ç§Ç©
 protected:

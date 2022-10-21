@@ -45,6 +45,10 @@ void GameMain::Initialize()
 	camera->Initialize();
 	camera->SetPosition(character);
 
+	//エフェクト管理クラス
+	effectManager = new EffectManager();
+	effectManager->Initialize();
+
 	//弾生成クラス
 	bulletCreater = new BulletCreater(&activeBullet, &deactiveBullet);
 
@@ -55,14 +59,14 @@ void GameMain::Initialize()
 	for (int i = 0; i < PLAYER_AMOUNT; i++)
 	{
 		character[i] = new Player(bulletCreater);
-		character[i]->Initialize();
+		character[i]->Initialize(effectManager);
 	}
 
 	//エネミー
 	for (int i = PLAYER_AMOUNT; i < CHARACTER_AMOUNT; ++i)
 	{
 		character[i] = new Enemy(bulletCreater);
-		character[i]->Initialize();
+		character[i]->Initialize(effectManager);
 	}
 
 	//敵の弾
@@ -76,19 +80,13 @@ void GameMain::Initialize()
 	background = new Background;
 	background->Initialize();
 
-	//エフェクトクラス
-	effectManager = new EffectManager();
-	//guardEffect = new GuardEffect();
-	//guardEffect->Initialize();
+	
 
 	uiManager = new UiManager;
 	uiManager->Initialize();
 
 	//当たり判定クラス
 	hitchecker = new HitChecker(CHARACTER_AMOUNT);
-
-	
-
 }
 
 void GameMain::Finalize()
@@ -104,10 +102,9 @@ void GameMain::Activate()
 {
 	for (int i = 0; i < CHARACTER_AMOUNT; ++i)
 	{
-		character[i]->Initialize();
+		character[i]->Initialize(effectManager);
 	}
 
-	effectManager;
 	//guardEffect->Activate(character[0]->GetPosition());
 
 	state = START;
@@ -143,7 +140,7 @@ void GameMain::Update()
 		(this->*pUpdate)();	//状態ごとの更新処理
 	}
 
-	guardEffect->Update();
+	//guardEffect->Update();
 
 	++frame;
 }
@@ -163,7 +160,7 @@ void GameMain::Draw()
 		character[i]->Draw();
 	}
 
-	guardEffect->Draw();
+	effectManager->Draw();
 
 	//UIデバッグ
 	DrawFormatString(50, 70, GetColor(255, 255, 255), "P::position.x : %f", character[0]->GetPosition().x);
@@ -221,9 +218,9 @@ void GameMain::UpdateGame()
 		pUpdate = &GameMain::UpdateGameOver;
 	}
 
+	effectManager->Update();
 	hitchecker->Check(character, character[0]->GetShieldPointer(), character[1]->GetBulletPointer());
 	camera->Update(character);
-	guardEffect->Update();
 }
 
 void GameMain::UpdateGameOver()

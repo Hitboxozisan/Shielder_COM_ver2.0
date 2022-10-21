@@ -49,7 +49,7 @@ Enemy::~Enemy()
 
 }
 
-void Enemy::Initialize()
+void Enemy::Initialize(EffectManager* const inEffectManager)
 {
 	vec = LEFT;
 	speed = NORMAL_SPEED;
