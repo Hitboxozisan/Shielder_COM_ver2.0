@@ -12,6 +12,7 @@
 #include "Shield.h"
 #include "Bullet.h"
 #include "BulletCreater.h"
+#include "EnemyAi.h"
 #include "Background.h"
 #include "UiManager.h"
 #include "EffectManager.h"
@@ -87,6 +88,8 @@ void GameMain::Initialize()
 
 	//当たり判定クラス
 	hitchecker = new HitChecker(CHARACTER_AMOUNT);
+
+	EnemyAi::GetInstance().Initialize(character);
 }
 
 void GameMain::Finalize()
@@ -161,7 +164,7 @@ void GameMain::Draw()
 		character[i]->Draw();
 	}
 
-	effectManager->Draw();
+	effectManager->Draw(character[0]->GetPosition());
 
 	//UIデバッグ
 	DrawFormatString(50, 70, GetColor(255, 255, 255), "P::position.x : %f", character[0]->GetPosition().x);

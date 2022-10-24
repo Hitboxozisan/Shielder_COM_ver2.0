@@ -98,10 +98,14 @@ void Character::MoveFinish()
 	}
 }
 
+/// <summary>
+/// ÚG‰Â”\‚©‚Ç‚¤‚©
+/// </summary>
+/// <returns></returns>
 const bool Character::IsCollidableState() const
 {
 	//–³“GŠÔ‚ğ‰ß‚¬‚½‚ç–³“Gó‘Ô‚ğ‰ğœ‚·‚é
-	if (invincibleTime >= 1.0f)
+	if (invincibleTime >= 0.8f)
 	{
 		return true;
 	}

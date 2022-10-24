@@ -122,13 +122,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\gaiya\Desktop\DxLib_VC\Dxlib_Effekseer</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\gaiya\OneDrive\デスクトップ\Dxlib_Effekseer</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\gaiya\Desktop\DxLib_VC\Dxlib_Effekseer</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\gaiya\OneDrive\デスクトップ\Dxlib_Effekseer</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -139,7 +139,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\gaiya\Desktop\DxLib_VC\Dxlib_Effekseer</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\gaiya\OneDrive\デスクトップ\Dxlib_Effekseer</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -147,7 +147,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\gaiya\Desktop\DxLib_VC\Dxlib_Effekseer</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\gaiya\OneDrive\デスクトップ\Dxlib_Effekseer</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -158,10 +158,12 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="DamageEffect.cpp" />
     <ClCompile Include="DeltaTime.cpp" />
     <ClCompile Include="EffectBase.cpp" />
     <ClCompile Include="EffectManager.cpp" />
     <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="EnemyAi.cpp" />
     <ClCompile Include="EnemyBase.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="GameDefine.cpp" />
@@ -175,6 +177,7 @@
     <ClCompile Include="Mover.cpp" />
     <ClCompile Include="ObjectBase.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerDiedEffect.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="RigorEffect.cpp" />
     <ClCompile Include="SceneBase.cpp" />
@@ -182,6 +185,7 @@
     <ClCompile Include="Shield.cpp" />
     <ClCompile Include="ShieldCreater.cpp" />
     <ClCompile Include="SmokeEffect.cpp" />
+    <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="UiManager.cpp" />
   </ItemGroup>
@@ -193,10 +197,12 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="DamageEffect.h" />
     <ClInclude Include="DeltaTime.h" />
     <ClInclude Include="EffectBase.h" />
     <ClInclude Include="EffectManager.h" />
     <ClInclude Include="Enemy.h" />
+    <ClInclude Include="EnemyAi.h" />
     <ClInclude Include="EnemyBase.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="GameDefine.h" />
@@ -210,6 +216,7 @@
     <ClInclude Include="ObjectBase.h" />
     <ClInclude Include="Pch.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerDiedEffect.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="RigorEffect.h" />
     <ClInclude Include="SceneBase.h" />
@@ -217,6 +224,7 @@
     <ClInclude Include="Shield.h" />
     <ClInclude Include="ShieldCreater.h" />
     <ClInclude Include="SmokeEffect.h" />
+    <ClInclude Include="SoundManager.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="UiManager.h" />
   </ItemGroup>

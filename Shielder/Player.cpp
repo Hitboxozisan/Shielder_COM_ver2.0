@@ -36,6 +36,7 @@ Player::Player(BulletCreater* const inBulletCreater)
 	,justDefenceTime()
 	,normalDefenceTime()
 	,pUpdate(nullptr)
+	,frame()
 {
 }
 
@@ -117,7 +118,8 @@ void Player::Update()
 	//体力が尽きたら死亡する
 	if (hitPoint <= 0.0f)
 	{
-		WaitTimer(1000);				//一秒止める
+		WaitTimer(1000);									//一秒止める
+		effectManager->CreatePlayerDiedEffect(position);	//死亡エフェクトを再生
 		state = DEAD;
 	}
 }
@@ -181,6 +183,9 @@ void Player::OnHitOtherCharacter(const VECTOR& forceDirection)
 	force = VScale(force, 8.0f);
 	force.z = 0.0f;
 
+	//ダメージエフェクトを生成する
+	effectManager->CreateDamageEffect(position);
+
 	velocity = VAdd(velocity, force);
 	hitPoint -= DECREMENT_HIT_POINT;		//体力を減少させる
 	state = DAMAGE;
@@ -200,6 +205,7 @@ void Player::OnHitShield(const VECTOR& adjust)
 	VECTOR force = adjust;
 	force.y = 0.0f;			//変な方向に動かないようにする
 	
+	//スパークエフェクトを生成する
 	effectManager->CreateSparkEffect(position);
 
 	//ガードしたタイミングによって後退させる量を変化させる
@@ -214,9 +220,17 @@ void Player::OnHitShield(const VECTOR& adjust)
 	else
 	{
 		//ジャストガードじゃないなら大きく後退させる
-		force = VScale(force, 8.0f);
+		force = VScale(force, 10.0f);
 		//体幹ゲージを増加させる
 		trunkPoint += INCREASE_TRUNK_POINT * 1.0f;
+	}
+
+	//自身の体幹ゲージが限界に達したらブレイクさせる
+	//Damageにしてrigorに移したほうがいいかも？
+	//そもそもこの要素は必要か？
+	if (trunkPoint <= TRUNK_POINT)
+	{
+		//state = RIGOR;
 	}
 
 	force.z = 0.0f;			//変な方向に動かないようにする
@@ -230,6 +244,10 @@ void Player::OnHitShieldWithBullet(const VECTOR& adjust)
 {
 }
 
+/// <summary>
+/// 生きているか
+/// </summary>
+/// <returns></returns>
 const bool Player::IsAlive() const
 {
 	//存在しないなら死んでいる状態にする
@@ -280,6 +298,9 @@ void Player::UpdateDamage()
 	Damage();
 }
 
+/// <summary>
+/// Rigor状態の更新処理
+/// </summary>
 void Player::UpdateRigor()
 {
 	Rigor();
@@ -351,9 +372,7 @@ void Player::Defense()
 /// </summary>
 void Player::Slide()
 {
-	//エフェクト生成
-
-	
+	frame++;
 	//滑らせる
 	if (velocity.x <= 0.0f)
 	{
@@ -364,10 +383,16 @@ void Player::Slide()
 		velocity.x -= FRICTION_FORCE;
 	}
 	
+	//10フレームおきにエフェクト生成
+	if (frame % 10 == 0)
+	{
+		effectManager->CreateSmokeEffect(nextPosition);
+	}
 
 	//止まったら通常状態に戻る
 	if (VSquareSize(velocity) <= STOP_VELOCITY)
 	{
+		frame = 0;
 		isJust = false;						//ジャストガード結果を解除
 		velocity = ZERO_VECTOR;
 		state = NORMAL;
@@ -385,7 +410,7 @@ void Player::Damage()
 	noDrawFrame = !noDrawFrame;		//2回に1回描画しない
 
 	//エフェクト生成
-
+	
 
 	nextPosition = VAdd(nextPosition, velocity);
 
@@ -459,6 +484,9 @@ void Player::InputAction()
 /// </summary>
 void Player::CreateShield()
 {
-	shield->Activate(position, direction, prevDirection);		//盾を生成する
-	state = DEFENSE;	
+	if (shield->GetState() == ShieldState::NONE)
+	{
+		shield->Activate(position, direction, prevDirection);		//盾を生成する
+		state = DEFENSE;
+	}
 }

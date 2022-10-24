@@ -29,8 +29,8 @@ public:
 		ASSAULT = 0,	//突進攻撃
 		BULLET,			//通常弾発射
 		SLOW_BULLET,	//遅延弾発射
-		//JUMP,			//ジャンプ
-		JUMPKICK,		//ジャンプからキック
+		JUMP,			//ジャンプ
+		KICK,			//キック
 		JUDGE,			//どこにいるか判断
 		BACK,			//画面端に戻る
 
@@ -60,6 +60,7 @@ private:
 	static const float DEFENSE_SPEED;
 	static const float KICK_SPEED;							//キック時スピード
 	static const float JUMP_DIRECTION_Y;					//ジャンプ時に上方向に加える力
+	static const float JUMP_HEIGHT;							//JUMPKICK時の最大高度
 	static const float STOP_VELOCITY;
 	static const float FRICTION_FORCE;
 	static const float GRAVITY;								//重力
@@ -71,6 +72,7 @@ private:
 	static const float JUMPKICK_MAGNIFICATION;				//JUMPKICK時の減少倍率
 	static const float SHOT_INTERVAL;
 
+	float frame;
 	float trunkMagnification;		//防がれたときの体幹ゲージの減る倍率
 	int assaultCount;
 	float movedDistance;			//移動を始めてからの移動量
@@ -84,11 +86,13 @@ private:
 
 	VECTOR vec;
 	VECTOR returnForce;
+	VECTOR jumpPower;
 	EnemyState physical;
 	State state;
 	AttackType attackType;					//敵の行動パターン
 	AttackType prevType;					//前回の行動パターン
 	
+	//各状態に応じた更新処理
 	void UpdateFine();
 	void UpdateCaution();
 	void UpdateDenger();
@@ -102,7 +106,8 @@ private:
 	void Assault();				//突進攻撃
 	void Bullet();				//弾発射
 	void SlowBullet();
-	void JumpKick();			//ジャンプ後プレイヤーに向かって突進
+	void Jump();				//ジャンプ後プレイヤーに向かって突進
+	void Kick();
 	void Back();				//画面端に戻る
 	void Slide();
 

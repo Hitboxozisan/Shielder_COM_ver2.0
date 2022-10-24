@@ -72,6 +72,7 @@ private:
 	float normalDefenceTime;		//ノーマルガードと判断する時間
 	
 	bool isJust;					//ジャストガードか
+	int  frame;						//フレーム
 
 	void (Player::* pUpdate)();		//Update関数ポインタ
 

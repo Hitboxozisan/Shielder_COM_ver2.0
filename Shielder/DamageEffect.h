@@ -2,12 +2,12 @@
 
 #include "EffectBase.h"
 
-class GuardEffect : public EffectBase
+class DamageEffect : public EffectBase
 {
 public:
-	GuardEffect();
-	~GuardEffect();
-	
+	DamageEffect();
+	~DamageEffect();
+
 	void Initialize();
 	void Finalize();
 	void Activate(VECTOR inPosition);
@@ -16,9 +16,8 @@ public:
 	void Draw();
 
 private:
-	//GuardEffect();
-	GuardEffect(const GuardEffect&);
-	void operator=(const GuardEffect&);
-	//~GuardEffect();
+	DamageEffect(const DamageEffect&);
+	void operator=(const DamageEffect&);
+
 };
 

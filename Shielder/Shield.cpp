@@ -44,27 +44,12 @@ void Shield::Create()
 void Shield::Activate(const VECTOR& inPosition, const VECTOR& inDirection, const VECTOR& inPrevDirection)
 {
 	state = DEPLOYMENT;
-	defenseCount = 0.0f;
+	defenseCount = 0.0f;				//経過時間をリセットする
 	position = inPosition;				//盾の位置を設定
 	direction = inDirection;			
 	prevDirection = inPrevDirection;
 	
-
-	//プレイヤーの前方に設置
-	if (VSquareSize(prevDirection) != 0.0f)
-	{
-		DistanceToPlyaer = VScale(prevDirection, SCALE_BY_DIRECTION_FOR_CORRECTION);
-	}
-	else
-	{
-		//DistanceToPlyaer = VScale(prevDirection, SCALE_BY_DIRECTION_FOR_CORRECTION);
-	}
-
-	if (VSquareSize(prevDirection) != 0.0f)
-	{
-		MV1SetRotationYUseDir(modelHandle, prevDirection, 0.0f);
-	}
-	
+	MV1SetRotationYUseDir(modelHandle, prevDirection, 0.0f);
 }
 
 void Shield::Deactivate()
@@ -111,24 +96,21 @@ void Shield::Update(const VECTOR& inPosition, const VECTOR& inDirection, const V
 	//位置を設定
 	position = inPosition;
 	direction = inDirection;
+	prevDirection = inPrevDirection;
 
+	//プレイヤーの前方に設置
+	DistanceToPlyaer = VScale(prevDirection, SCALE_BY_DIRECTION_FOR_CORRECTION);
 	position = VAdd(position, DistanceToPlyaer);
-
-	////プレイヤーの前方に設置
-	//VECTOR DistanceToPlyaer = VScale(direction, SCALE_BY_DIRECTION_FOR_CORRECTION);
-	//position = VAdd(position, DistanceToPlyaer);
 
 	MV1SetPosition(modelHandle, position);
 	
-	
 	collisionSphere.Move(position);
 
-	//敵との当たり判定
-	
 }
 
 void Shield::Draw()
 {
+	//存在しないなら処理しない
 	if (state == NONE)
 	{
 		return;

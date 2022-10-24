@@ -10,7 +10,7 @@ public:
     virtual void Activate(const VECTOR& creatorPosition, float creatorSize) = 0;
     void Deactivate();
     void Update();
-    virtual void Draw();
+    virtual void Draw(const VECTOR& inPosition);
 
     bool GetExist() const;    // ë∂ç›ÇµÇƒÇ¢ÇÈÇ©Ç«Ç§Ç©Çï‘Ç∑
 

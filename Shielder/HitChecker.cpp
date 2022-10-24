@@ -10,7 +10,7 @@
 
 HitChecker::HitChecker(int inCharacaterAmount)
 	:characterAmount(inCharacaterAmount)
-	,hitStopTime(0)
+	,hitStopTime(0.0f)
 {
 }
 

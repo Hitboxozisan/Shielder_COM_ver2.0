@@ -27,9 +27,16 @@ private:
 	static const std::string RESULT_PATH;
 	static const std::string FILENAME_EXTENSION;
 
+	int font;
+	int number[9];
 	int alpha;
 	int alphaAdd;
 	int imageHandle;
+	int lifeBonus;
+	int destroyBonus;
+	int totalScore;
 	int pushEnterImageHandle;
+
+	int frame;
 };
 

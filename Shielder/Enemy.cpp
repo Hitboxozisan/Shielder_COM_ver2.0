@@ -4,6 +4,7 @@
 #include <random>
 #include "Enemy.h"
 
+#include "EnemyAi.h"
 #include "Bullet.h"
 #include "BulletCreater.h"
 
@@ -13,8 +14,9 @@
 const float Enemy::COLLIDE_RADIUS = 50.0f;
 const float Enemy::NORMAL_SPEED = 3.0f;
 const float Enemy::DEFENSE_SPEED = 2.0f;
-const float Enemy::KICK_SPEED = 7.0f;							
+const float Enemy::KICK_SPEED = 20.0f;							
 const float Enemy::JUMP_DIRECTION_Y = -30.0f;
+const float Enemy::JUMP_HEIGHT = 700.0f;
 const float Enemy::STOP_VELOCITY = 0.5f;
 const float Enemy::FRICTION_FORCE = 0.05f;
 const float Enemy::GRAVITY = 0.25f;
@@ -28,6 +30,7 @@ const float Enemy::SHOT_INTERVAL = 1.0f;
 
 Enemy::Enemy(BulletCreater* const inBulletCreater)
 	:Character(inBulletCreater)
+	,frame(0.0f)
 	,trunkMagnification()
 	,assaultCount(0)
 	,movedDistance(0.0f)
@@ -303,21 +306,47 @@ void Enemy::SlowBullet()
 /// <summary>
 /// ジャンプ後プレイヤーに向かって突進
 /// </summary>
-void Enemy::JumpKick()
+void Enemy::Jump()
 {
-	bool isKick;
-
+	jumpPower.y += GRAVITY;
 	//一定高さまでジャンプしたら
-	if (nextPosition.y <= 200.0f)
+	if (nextPosition.y >= JUMP_HEIGHT)
 	{
-		//反対側までキックする
-
-
+		jumpPower = ZERO_VECTOR;
+		frame++;
+		//規定フレーム経過したら
+		if (frame >= 60.0f)
+		{
+			attackType = KICK;			//次の状態に移行する
+		}
 	}
+	//一定の高さになるまでフレームを加算しない
+	else
+	{
+		frame = 0;
+	}
+	
+	nextPosition = VAdd(nextPosition, jumpPower);			//移動
+}
+
+/// <summary>
+/// プレイヤーに向かって突進
+/// </summary>
+void Enemy::Kick()
+{
+	VECTOR playerPosition;				//プレイヤーの位置
+
+	playerPosition = EnemyAi::GetInstance().DeterminingLandingPoint();		//プレイヤーの位置を特定
+	jumpPower = VNorm(playerPosition - nextPosition) * KICK_SPEED;			//プレイヤーの位置へのベクトルを設定
+	
+
 	if (nextPosition.y <= 0.0f)
 	{
-		attackType = JUDGE;
+		nextPosition.y = 0.0f;
+		attackType = JUDGE;				//地面と接触したら次の状態に移行する
 	}
+
+	nextPosition = VAdd(nextPosition, jumpPower);			//移動
 }
 
 /// <summary>
@@ -431,6 +460,11 @@ void Enemy::SetNextAttack()
 	position.y = 0.0f;
 	nextPosition.y = 0.0f;
 
+	//次の状態を指定（テスト用）
+	/*attackType = JUMP;
+	return;*/
+
+	//前回の行動がSLOW_BULLETかつ規定数撃っていない場合
 	if (prevType == SLOW_BULLET && shotCount <= 2.0f)
 	{
 		attackType = SLOW_BULLET;
@@ -440,16 +474,10 @@ void Enemy::SetNextAttack()
 		shotCount = 0;				//発射回数をリセット
 		int nextAttack = next(eng);	//次の行動を指定
 		AttackType at = static_cast<AttackType>(nextAttack);	//列挙型に変換する
-		if (prevType == at)
+		if (prevType == at || prevType == SLOW_BULLET)
 		{
 			nextAttack = next(eng);
 			at = static_cast<AttackType>(nextAttack);
-		}
-
-		//次の行動がジャンプ蹴りだった場合上向きに力を加えておく
-		if (at == JUMPKICK)
-		{
-			returnForce.y = JUMP_DIRECTION_Y;
 		}
 
 		attackType = at;		//次の状態に移行する
@@ -461,9 +489,11 @@ void Enemy::SetNextAttack()
 /// </summary>
 void Enemy::CurrentPositionJudge()
 {
-	float sub;
 	returnForce = VGet(13.0f, 0.0f, 0.0f);
 	returnForce.y = JUMP_DIRECTION_Y;
+	jumpPower = ZERO_VECTOR;
+	jumpPower.y = -JUMP_DIRECTION_Y;
+	//jumpPower = VScale(jumpPower, 0.7f);
 
 	//エネミーの現在地が右端寄りなら
 	if (SCREEN_RIGHTMOST - position.x <= SCREEN_CENTER)
@@ -489,7 +519,6 @@ void Enemy::CurrentPositionJudge()
 		nextDirction = VGet(-1.0f, 0.0f, 0.0f);
 		//画面端に戻る
 		attackType = BACK;
-		
 
 		//右端が近くなったら
 		if (SCREEN_RIGHTMOST - position.x <= 150.0f)
@@ -547,9 +576,13 @@ void Enemy::UpdateAttack()
 		trunkMagnification = SLOW_BULLET_MAGNIFICATION;
 		SlowBullet();
 		break;
-	case JUMPKICK:
+	case JUMP:
 		trunkMagnification = JUMPKICK_MAGNIFICATION;
-		JumpKick();
+		Jump();
+		break;
+	case KICK:
+		trunkMagnification = JUMPKICK_MAGNIFICATION;
+		Kick();
 		break;
 	case JUDGE:
 		CurrentPositionJudge();

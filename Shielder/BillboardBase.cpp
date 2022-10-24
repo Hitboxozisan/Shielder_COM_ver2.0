@@ -47,7 +47,7 @@ void BillboardBase::Update()
 	UpdateEach();		//子クラス別の更新処理
 }
 
-void BillboardBase::Draw()
+void BillboardBase::Draw(const VECTOR& inPosition)
 {
 }
 

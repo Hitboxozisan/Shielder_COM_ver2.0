@@ -32,7 +32,7 @@ void SceneManager::Initialize()
 	}
 
 	//–{—ˆ‚ÍTITLE
-	currentScene = nextScene = TITLE;
+	currentScene = nextScene = RESULT;
 #ifdef DEBUG
 	currentScene = nextScene = GAME_MAIN;
 #endif

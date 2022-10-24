@@ -13,6 +13,9 @@ public:
 	void Update(Character** character);
 	void Finalize();
 
+	//ゲーム開始時にカメラを所定の位置まで移動させる
+
+
 	//現在位置を取得
 	const VECTOR& GetCameraPosition() const { return position; }
 

@@ -1,4 +1,7 @@
 #include "Pch.h"
+#include <chrono>
+#include <thread>
+#include <random>
 #include "Result.h"
 
 #include "GameDefine.h"
@@ -14,6 +17,10 @@ const string Result::FILENAME_EXTENSION = ".png";
 Result::Result(SceneManager* const sceneManager)
 	:SceneBase(sceneManager)
 	,imageHandle()
+	,lifeBonus()
+	,destroyBonus()
+	,totalScore()
+	,frame()
 {
 }
 
@@ -25,6 +32,12 @@ void Result::Initialize()
 {
 	string path = IMAGE_FOLDER_PATH;
 	string fullpath = path + RESULT_PATH + FILENAME_EXTENSION;
+
+	//フォント読み込み
+	font = CreateFontToHandle("Molot", 50, 1, DX_FONTTYPE_ANTIALIASING);
+
+	//数字読み込み
+	LoadDivGraph("Data/Font/number.png", 10, 190, 27, 19, 27, number);
 
 	alpha = 255;
 	alphaAdd = -1;
@@ -45,6 +58,7 @@ void Result::Finalize()
 
 void Result::Activate()
 {
+	frame = 0;
 }
 
 void Result::Deactivate()
@@ -53,6 +67,18 @@ void Result::Deactivate()
 
 void Result::Update()
 {
+	//乱数用変数
+	std::random_device rd;
+	std::mt19937 eng(rd());
+	std::uniform_int_distribution<int> next(0, 999999999 - 1);
+
+	frame++;
+
+	
+	{
+		lifeBonus = next(eng);
+	}
+
 	//スペースキーでタイトルに
 	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_RETURN))
 	{
@@ -71,6 +97,10 @@ void Result::Draw()
 	{
 		alphaAdd = -alphaAdd;
 	}
+
+	//テスト描画
+	//DrawFormatStringToHandle(200, 200, , GetColor(255, 255, 255), font);
+	DrawGraph(300, 200, number[0], TRUE);
 
 	SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
 	DrawExtendGraph(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, pushEnterImageHandle, TRUE);
