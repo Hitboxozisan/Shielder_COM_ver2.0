@@ -30,9 +30,9 @@ public:
 	void ReleaseInvincible();							//無敵解除
 
 	//当たり判定関係関数
-	void OnHitOtherCharacter(const VECTOR& forceDirection);
-	void OnHitShield(const VECTOR& adjust);				//盾とキャラクターが当たった
-	void OnHitShieldWithBullet(const VECTOR& adjust);
+	void OnHitOtherCharacter(const VECTOR& forceDirection, bool just);
+	void OnHitShield(const VECTOR& adjust, bool just);				//盾とキャラクターが当たった
+	void OnHitShieldWithBullet(const VECTOR& adjust, bool just);
 
 	//ゲッター
 	const State GetState() const { return state; }

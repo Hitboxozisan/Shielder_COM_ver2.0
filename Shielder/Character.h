@@ -39,9 +39,9 @@ public:
 	void MoveFinish();				//移動予定地に実際に移動する
 
 	//当たり判定関係関数
-	virtual void OnHitOtherCharacter(const VECTOR& forceDirection) = 0;		//他のキャラクターと当たった
-	virtual void OnHitShield(const VECTOR& adjust) = 0;						//盾とキャラクターが当たった
-	virtual void OnHitShieldWithBullet(const VECTOR& adjust) = 0;			//盾と弾が接触した
+	virtual void OnHitOtherCharacter(const VECTOR& forceDirection, bool just) = 0;		//他のキャラクターと当たった
+	virtual void OnHitShield(const VECTOR& adjust, bool just) = 0;						//盾とキャラクターが当たった
+	virtual void OnHitShieldWithBullet(const VECTOR& adjust, bool just) = 0;			//盾と弾が接触した
 
 	//ゲッター
 	const float& GetHitPoint() const { return hitPoint; }							//現在のhitPointを返す
@@ -51,6 +51,7 @@ public:
 	const bool IsCollidableState() const;											//何かと接触できる状態か
 	const float GetInvicibleTime() const { return invincibleTime; }					//無敵時間の経過時間を返す
 	virtual const bool IsAlive() const = 0;
+	virtual const bool IsJust() const;
 
 	Shield* GetShieldPointer() const { return shield; }
 	Bullet* GetBulletPointer() const { return bullet; }

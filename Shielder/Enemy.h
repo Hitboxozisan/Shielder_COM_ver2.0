@@ -43,9 +43,9 @@ public:
 	void Update();
 
 	void Draw();
-	void OnHitOtherCharacter(const VECTOR& forceDirection);		//他のキャラクターと当たった
-	void OnHitShield(const VECTOR& adjust);				//盾とキャラクターが当たった
-	void OnHitShieldWithBullet(const VECTOR& adjust);
+	void OnHitOtherCharacter(const VECTOR& forceDirection, bool just);		//他のキャラクターと当たった
+	void OnHitShield(const VECTOR& adjust, bool just);						//盾とキャラクターが当たった
+	void OnHitShieldWithBullet(const VECTOR& adjust, bool just);
 
 	//const bool IsCollidableState() const;
 	const float GetTrunk() const { return trunkPoint; }

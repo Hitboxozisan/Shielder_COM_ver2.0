@@ -58,8 +58,8 @@ void HitChecker::ShieldAndCharacter(Character** character, Shield *shield)
 			//printfDx("HitShield");
 			sub = VScale(sub, 1.0f);				//吹き飛ばす方向は逆方向
 			VECTOR forceDirection = VNorm(sub);
-			character[0]->OnHitShield(forceDirection);
-			character[1]->OnHitShield(forceDirection);
+			character[0]->OnHitShield(forceDirection, character[0]->IsJust());
+			character[1]->OnHitShield(forceDirection, character[0]->IsJust());
 			WaitTimer(hitStopTime);					//ヒットストップ
 		}
 	}
@@ -88,8 +88,8 @@ void HitChecker::CharacterAndCharacter(Character** character)
 	{
 		sub = VScale(sub, 1.0f);		//吹き飛ばす方向は逆方向
 		VECTOR forceDirection = VNorm(sub);
-		character[0]->OnHitOtherCharacter(forceDirection);
-		character[1]->OnHitOtherCharacter(forceDirection);
+		character[0]->OnHitOtherCharacter(forceDirection, character[0]->IsJust());
+		character[1]->OnHitOtherCharacter(forceDirection, character[0]->IsJust());
 		WaitTimer(hitStopTime);			//ヒットストップ
 	}
 }
@@ -121,8 +121,8 @@ void HitChecker::ShieldAndBullet(Character** character, Shield* shield, Bullet* 
 		{
 			sub = VScale(sub, 1.0f);		//吹き飛ばす方向は逆方向
 			VECTOR forceDirection = VNorm(sub);
-			character[0]->OnHitShield(forceDirection);
-			character[1]->OnHitShieldWithBullet(forceDirection);
+			character[0]->OnHitShield(forceDirection, character[0]->IsJust());
+			character[1]->OnHitShieldWithBullet(forceDirection, character[0]->IsJust());
 			bullet->OnHitBreak();
 			WaitTimer(hitStopTime);				//ヒットストップ
 		}
@@ -155,7 +155,7 @@ void HitChecker::CharacterAndBullet(Character** character, Bullet* bullet)
 		{
 			sub = VScale(sub, 1.0f);		//吹き飛ばす方向は逆方向
 			VECTOR forceDirection = VNorm(sub);
-			character[0]->OnHitOtherCharacter(forceDirection);
+			character[0]->OnHitOtherCharacter(forceDirection, character[0]->IsJust());
 			bullet->OnHitBreak();
 			WaitTimer(hitStopTime);			//ヒットストップ
 		}

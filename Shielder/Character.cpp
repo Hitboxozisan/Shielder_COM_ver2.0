@@ -51,7 +51,7 @@ void Character::Draw()
 	
 }
 
-void Character::OnHitOtherCharacter(const VECTOR& forceDirection)
+void Character::OnHitOtherCharacter(const VECTOR& forceDirection, bool just)
 {
 	//VECTOR force = forceDirection;
 	//force.y = HIT_OTHER_CHARACTER_DIRECTION_Y;
@@ -114,6 +114,11 @@ const bool Character::IsCollidableState() const
 }
 
 const bool Character::IsAlive() const
+{
+	return false;
+}
+
+const bool Character::IsJust() const
 {
 	return false;
 }

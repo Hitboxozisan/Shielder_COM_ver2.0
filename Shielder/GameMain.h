@@ -2,6 +2,7 @@
 
 #include "SceneBase.h"
 #include <list>
+#include <string>
 
 class Camera;
 class Player;
@@ -14,6 +15,7 @@ class Background;
 class EffectManager;
 class GuardEffect;
 class UiManager;
+class Result;
 
 class GameMain final : public SceneBase
 {
@@ -41,6 +43,11 @@ private:
 	GameMain(const GameMain&);
 	void operator=(const GameMain&);
 
+	//ファイルパス
+	static const std::string IMAGE_FOLDER_PATH;
+	static const std::string RESULT_PATH;
+	static const std::string  FILENAME_EXTENSION;
+
 	static const int PLAYER_AMOUNT;
 	static const int ENEMY_AMOUNT;
 	static const int CHARACTER_AMOUNT;
@@ -56,6 +63,7 @@ private:
 	GuardEffect* guardEffect;
 	EffectManager* effectManager;
 	UiManager* uiManager;
+	//Result* result;
 
 	std::list<Bullet*> activeBullet;
 	std::list<Bullet*> deactiveBullet;
@@ -67,5 +75,12 @@ private:
 	void UpdateResult();
 	void (GameMain::* pUpdate)();
 
+	int fontHandle;						//フォント用ハンドル
+	int resultImageHandle;				//リザルト画面画像
+	int lifeScore;
+	int destroyScore;
+	int totalScore;
 	int frame;							//経過フレーム
+
+	int alpha;							//ALPHA値（テスト）
 };

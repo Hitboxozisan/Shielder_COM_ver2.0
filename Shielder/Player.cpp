@@ -3,6 +3,7 @@
 
 #include "Shield.h"
 
+#include "GameDefine.h"
 #include "EffectManager.h"
 #include "ModelManager.h"
 #include "KeyManager.h"
@@ -171,7 +172,7 @@ void Player::ReleaseInvincible()
 /// 他のキャラクターと接触した
 /// </summary>
 /// <param name="forceDirection">吹き飛ばす量</param>
-void Player::OnHitOtherCharacter(const VECTOR& forceDirection)
+void Player::OnHitOtherCharacter(const VECTOR& forceDirection, bool just)
 {
 	//前回のvelocityをリセットする
 	velocity = ZERO_VECTOR;
@@ -196,7 +197,7 @@ void Player::OnHitOtherCharacter(const VECTOR& forceDirection)
 /// 盾が他のキャラクターと接触した
 /// </summary>
 /// <param name="adjust">吹き飛ばす量</param>
-void Player::OnHitShield(const VECTOR& adjust)
+void Player::OnHitShield(const VECTOR& adjust, bool just)
 {
 	//前回のvelocityをリセットする
 	velocity = ZERO_VECTOR;
@@ -240,7 +241,7 @@ void Player::OnHitShield(const VECTOR& adjust)
 	pUpdate = &Player::UpdateSlide;
 }
 
-void Player::OnHitShieldWithBullet(const VECTOR& adjust)
+void Player::OnHitShieldWithBullet(const VECTOR& adjust, bool just)
 {
 }
 
@@ -399,7 +400,10 @@ void Player::Slide()
 		pUpdate = &Player::UpdateNormal;
 	}
 
-	nextPosition = VAdd(nextPosition, velocity);
+	if (nextPosition.x >= SCREEN_LEFTMOST && nextPosition.x <= SCREEN_RIGHTMOST)
+	{
+		nextPosition = VAdd(nextPosition, velocity);
+	}
 }
 
 /// <summary>
@@ -442,6 +446,16 @@ void Player::Rigor()
 void Player::InputAction()
 {
 	inputDirection = ZERO_VECTOR;
+
+#ifdef DEBUG
+	//スペースキーで死亡
+	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_SPACE))
+	{
+		hitPoint = 0;
+	}
+
+#endif // DEBUG
+
 	//左右移動
 	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_A) && nextPosition.x >= SCREEN_LEFTMOST)
 	{
@@ -475,6 +489,7 @@ void Player::InputAction()
 		pUpdate = &Player::UpdateNormal;
 		shield->Deactivate();			//盾を消滅させる
 	}
+
 
 	
 }

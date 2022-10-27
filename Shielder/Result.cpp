@@ -89,7 +89,7 @@ void Result::Update()
 
 void Result::Draw()
 {
-	SetDrawBright(255, 255, 255);
+	//SetDrawBright(255, 255, 255);
 	DrawExtendGraph(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, imageHandle, TRUE);
 
 	alpha += alphaAdd;						//èôÅXÇ…ìßñæÇ…Ç∑ÇÈ

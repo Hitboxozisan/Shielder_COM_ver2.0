@@ -21,7 +21,7 @@ const float Enemy::STOP_VELOCITY = 0.5f;
 const float Enemy::FRICTION_FORCE = 0.05f;
 const float Enemy::GRAVITY = 0.25f;
 const float Enemy::TRUNK_POINT = 100.0f;
-const float Enemy::INCREASE_TRUNK_POINT = 3.0f;
+const float Enemy::INCREASE_TRUNK_POINT = 5.0f;
 const float Enemy::ASSAULT_MAGNIFICATION = 1.0f;
 const float Enemy::BULLET_MAGNIFICATION = 1.2;	
 const float Enemy::SLOW_BULLET_MAGNIFICATION = 0.3;
@@ -132,15 +132,17 @@ void Enemy::Draw()
 	
 }
 
-void Enemy::OnHitOtherCharacter(const VECTOR& forceDirection)
+void Enemy::OnHitOtherCharacter(const VECTOR& forceDirection, bool just)
 {
 	stopTime = 0.0f;
 	//移動を止める
 	stopMove = true;
 }
 
-void Enemy::OnHitShield(const VECTOR& adjust)
+void Enemy::OnHitShield(const VECTOR& adjust, bool just)
 {
+	bool isjust;			//ジャストガードされたか
+	isjust = just;
 	//前回のvelocityをリセットする
 	velocity = ZERO_VECTOR;
 	stopTime = 0.0f;
@@ -155,7 +157,15 @@ void Enemy::OnHitShield(const VECTOR& adjust)
 	//後退させる
 	velocity = VAdd(velocity, force);
 	
-	trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification;		//体幹ゲージ減少
+	//ジャストガードじゃなければ減少量を半減させる
+	if (isjust)
+	{
+		trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification;
+	}
+	else
+	{
+		trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification * 0.5;
+	}
 	state = SLIDE;
 	pUpdate = &Enemy::UpdateSlide;
 	
@@ -166,9 +176,20 @@ void Enemy::OnHitShield(const VECTOR& adjust)
 /// 盾と弾が接触した
 /// </summary>
 /// <param name="adjust"></param>
-void Enemy::OnHitShieldWithBullet(const VECTOR& adjust)
+void Enemy::OnHitShieldWithBullet(const VECTOR& adjust, bool just)
 {
-	trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification;		//体幹ゲージ減少
+	bool isjust;
+	isjust = just;
+
+	//ジャストガードじゃなければ減少量を半減させる
+	if (isjust)
+	{
+		trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification;
+	}
+	else
+	{
+		trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification * 0.5;
+	}
 }
 
 const bool Enemy::IsAlive() const
@@ -489,7 +510,7 @@ void Enemy::SetNextAttack()
 /// </summary>
 void Enemy::CurrentPositionJudge()
 {
-	returnForce = VGet(13.0f, 0.0f, 0.0f);
+	returnForce = VGet(15.0f, 0.0f, 0.0f);
 	returnForce.y = JUMP_DIRECTION_Y;
 	jumpPower = ZERO_VECTOR;
 	jumpPower.y = -JUMP_DIRECTION_Y;

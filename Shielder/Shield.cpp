@@ -10,7 +10,7 @@ using namespace ShieldState;
 
 const float Shield::SCALE_BY_DIRECTION_FOR_CORRECTION = 80.0f;
 const float Shield::COLLISION_SHIELD_RADIUS = 20.0f;
-const float Shield::COLLISION_SHIELD_HEIGHT = 120.0f;
+const float Shield::COLLISION_SHIELD_HEIGHT = 50.0f;
 
 Shield& Shield::GetInstance()
 {
@@ -105,6 +105,7 @@ void Shield::Update(const VECTOR& inPosition, const VECTOR& inDirection, const V
 	MV1SetPosition(modelHandle, position);
 	
 	collisionSphere.Move(position);
+	collisionSphere.worldCenter.y = COLLISION_SHIELD_HEIGHT;
 
 }
 

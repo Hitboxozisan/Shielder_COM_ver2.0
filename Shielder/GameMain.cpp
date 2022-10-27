@@ -1,4 +1,8 @@
 #include "Pch.h"
+#include <chrono>
+#include <thread>
+#include <random>
+
 #include "GameMain.h"
 
 #include "KeyManager.h"
@@ -17,6 +21,12 @@
 #include "UiManager.h"
 #include "EffectManager.h"
 #include "GuardEffect.h"
+#include "Result.h"
+
+
+const string GameMain::IMAGE_FOLDER_PATH = "Data/Image/";
+const string GameMain::RESULT_PATH = "Result";
+const string GameMain::FILENAME_EXTENSION = ".png";
 
 const int	GameMain::PLAYER_AMOUNT = 1;
 const int	GameMain::ENEMY_AMOUNT = 1;
@@ -28,6 +38,7 @@ GameMain::GameMain(SceneManager* const sceneManager)
 	,state(START)
 	,pUpdate(nullptr)
 	,frame()
+	,alpha()
 {
 }
 
@@ -41,8 +52,21 @@ GameMain::~GameMain()
 
 void GameMain::Initialize()
 {
+	string path = IMAGE_FOLDER_PATH;
+	string fullpath = path + RESULT_PATH + FILENAME_EXTENSION;
+
+	//画像読み込み（ここはあとで別クラスで処理させるべきか）
+	resultImageHandle = LoadGraph(fullpath.c_str());
+	if (resultImageHandle < 0)
+	{
+		printfDx("読み込みに失敗_imageHandle");
+	}
+	//新しいフォントデータを作成
+	fontHandle = CreateFontToHandle("Molot", 100, 1, DX_FONTTYPE_ANTIALIASING);
+
+
 	//カメラクラス
-	camera = new Camera();
+ 	camera = new Camera();
 	camera->Initialize();
 	camera->SetPosition(character);
 
@@ -126,7 +150,7 @@ void GameMain::Deactivate()
 		
 	}
 
-
+	state = START;
 }
 
 void GameMain::Update()
@@ -150,6 +174,8 @@ void GameMain::Update()
 
 void GameMain::Draw()
 {
+	
+
 	background->Draw();		//背景描画
 	uiManager->Draw(state, character[0]->GetHitPoint(), character[0]->GetTrunkPoint(), character[1]->GetTrunkPoint());
 
@@ -162,6 +188,22 @@ void GameMain::Draw()
 	for (int i = 0; i < CHARACTER_AMOUNT; ++i)
 	{
 		character[i]->Draw();
+	}
+
+	//画面をフェードアウト
+	if (state == GAME_OVER || state == RESULT)
+	{
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, alpha);
+		DrawBox(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GetColor(0, 0, 0), TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+
+	//リザルト画面の表示
+	if (state == RESULT)
+	{
+		//リザルト画像描画
+		DrawExtendGraph(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, resultImageHandle, TRUE);
+		DrawFormatStringToHandle(1400, 800, GetColor(255, 255, 255), fontHandle,  "%d", totalScore);
 	}
 
 	effectManager->Draw(character[0]->GetPosition());
@@ -218,6 +260,7 @@ void GameMain::UpdateGame()
 		character[1]->IsAlive() == false)
 	{
 		frame = 0.0f;
+		alpha = 0;
 		state = GAME_OVER;
 		pUpdate = &GameMain::UpdateGameOver;
 	}
@@ -230,18 +273,20 @@ void GameMain::UpdateGame()
 void GameMain::UpdateGameOver()
 {
 	
-	if (frame <= 255)
+	if (frame <= 200)
 	{
-		SetDrawBright(255 - frame, 255 - frame, 255 - frame);
+		//徐々に暗くしていく
+		alpha++;
+		//SetDrawBright(255 - frame, 255 - frame, 255 - frame);
 	}
 	else
 	{
-
-		parent->SetNextScene(SceneManager::RESULT);
-		return;
-
-		//リザルト画面描画
-		//DrawGraph(0, 0, resultImageHandle, TRUE);
+		
+		state = RESULT;
+		frame = 0;
+		pUpdate = &GameMain::UpdateResult;
+		//parent->SetNextScene(SceneManager::RESULT);
+		//return;
 	}
 
 
@@ -249,4 +294,29 @@ void GameMain::UpdateGameOver()
 
 void GameMain::UpdateResult()
 {
+	//乱数用変数
+	std::random_device rd;
+	std::mt19937 eng(rd());
+	std::uniform_int_distribution<int> next(0, 999999999 - 1);
+
+	//一定フレーム経過するまで
+	if (frame <= 240)
+	{
+		lifeScore = next(eng);
+		destroyScore = next(eng);
+		totalScore = next(eng);
+	}
+	else
+	{
+		totalScore = lifeScore + destroyScore;
+	}
+
+
+	//スペースキーもしくは一定時間経過でタイトル画面に移行する
+	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_ESCAPE) ||
+		frame >= 1200)
+	{
+		Deactivate();
+		parent->SetNextScene(SceneManager::TITLE);
+	}
 }

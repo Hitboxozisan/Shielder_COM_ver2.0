@@ -4,7 +4,9 @@
 
 #include <string>
 
-class Result final : public SceneBase 
+class Character;
+
+class Result final : public SceneBase
 {
 public:
 	Result(SceneManager* const sceneManager);
@@ -31,12 +33,18 @@ private:
 	int number[9];
 	int alpha;
 	int alphaAdd;
-	int imageHandle;
+	int imageHandle;					//Result画面画像
+	int playerLife;						//プレイヤーの残り体力
+	int destroy;						//倒したか
 	int lifeBonus;
 	int destroyBonus;
 	int totalScore;
 	int pushEnterImageHandle;
 
 	int frame;
+
+	Character** character;
+
+	//void SetCharacter(Character** character);
 };
 

@@ -182,6 +182,7 @@
     <ClCompile Include="RigorEffect.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="ScreenFade.cpp" />
     <ClCompile Include="Shield.cpp" />
     <ClCompile Include="ShieldCreater.cpp" />
     <ClCompile Include="SmokeEffect.cpp" />
@@ -221,6 +222,7 @@
     <ClInclude Include="RigorEffect.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="ScreenFade.h" />
     <ClInclude Include="Shield.h" />
     <ClInclude Include="ShieldCreater.h" />
     <ClInclude Include="SmokeEffect.h" />
