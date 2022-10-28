@@ -273,7 +273,8 @@ void GameMain::UpdateGameOver()
 	//エネミーが死んだ場合は演出を出す
 	if (character[1]->IsAlive() == false)
 	{
-		camera->PlayerZoom(character);
+		//camera->PlayerZoom(character);
+		effectManager->CreatePlayerLaser(character[0]->GetPosition());
 	}
 	else if (frame <= 200)
 	{
@@ -290,8 +291,8 @@ void GameMain::UpdateGameOver()
 		//parent->SetNextScene(SceneManager::RESULT);
 		//return;
 	}
-
-
+	
+	effectManager->Update(character[0]->GetPosition());
 }
 
 void GameMain::UpdateResult()

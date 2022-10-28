@@ -12,7 +12,8 @@ public:
 		SPARK,				//スパーク
 		DAMAGE,				//ダメージ
 		PLAYER_DEAD,		//死亡
-		RECOVERY,
+		RECOVERY,			//回復
+		PLAYER_LASER,		//プレイヤー勝利エフェクト
 
 		EFFECT_AMOUNT,		//エフェクトの総数
 	};
@@ -32,6 +33,7 @@ public:
 	void CreateDamageEffect(const VECTOR& inPosition);		//ダメージエフェクトを生成する
 	void CreatePlayerDiedEffect(const VECTOR& inPosition);	//プレイヤー死亡エフェクトを生成する
 	void CreateRecoveryEffect(const VECTOR& inPosition);	//プレイヤー回復エフェクトを生成する
+	void CreatePlayerLaser(const VECTOR& inPosition);		//プレイヤー勝利エフェクトを生成する
 
 private:
 	EffectManager(const EffectManager&);

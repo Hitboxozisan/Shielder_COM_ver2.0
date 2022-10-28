@@ -7,6 +7,7 @@
 #include "PlayerDiedEffect.h"
 #include "SmokeEffect.h"
 #include "RecoveryEffect.h"
+#include "PlayerLaserEffect.h"
 
 const int EffectManager::SMOKE_EFFECT_AMOUNT = 32;
 
@@ -43,6 +44,9 @@ void EffectManager::Initialize()
 
 	effects[3] = new RecoveryEffect();
 	effects[3]->Initialize();
+
+	effects[4] = new PlayerLaserEffect();
+	effects[4]->Initialize();
 
 	graphicEffects = new BillboardBase * [BILLBOARD_AMOUNT];
 
@@ -177,6 +181,15 @@ void EffectManager::CreateRecoveryEffect(const VECTOR& inPosition)
 	if (effects[RECOVERY]->GetExist() == false)
 	{
 		effects[RECOVERY]->Activate(inPosition);
+		return;
+	}
+}
+
+void EffectManager::CreatePlayerLaser(const VECTOR& inPosition)
+{
+	if (effects[PLAYER_LASER]->GetExist() == false)
+	{
+		effects[PLAYER_LASER]->Activate(inPosition);
 		return;
 	}
 }
