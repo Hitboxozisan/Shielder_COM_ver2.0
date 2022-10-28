@@ -156,7 +156,7 @@ bool Bullet::IsCollidableState() const
 
 void Bullet::OnOutField()
 {
-	state = NONE;
+	Deactivate();
 }
 
 void Bullet::OnHitBreak()

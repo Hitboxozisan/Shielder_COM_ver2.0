@@ -31,7 +31,7 @@ const string GameMain::FILENAME_EXTENSION = ".png";
 const int	GameMain::PLAYER_AMOUNT = 1;
 const int	GameMain::ENEMY_AMOUNT = 1;
 const int	GameMain::CHARACTER_AMOUNT = PLAYER_AMOUNT + ENEMY_AMOUNT;
-const float GameMain::MAX_BULLET_AMOUNT = 8;
+const float GameMain::MAX_BULLET_AMOUNT = 5;
 
 GameMain::GameMain(SceneManager* const sceneManager)
 	:SceneBase(sceneManager)
