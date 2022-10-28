@@ -1,7 +1,7 @@
 #include "Pch.h"
 
 #ifdef DEBUG
-const bool IS_WINDOW_MODE = true;
+const bool IS_WINDOW_MODE = false;
 #else
 const bool IS_WINDOW_MODE = false;
 #endif

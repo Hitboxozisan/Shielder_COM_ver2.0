@@ -9,7 +9,7 @@
 
 
 // ƒ‰ƒCƒ“‚ğ•`‚­”ÍˆÍ
-#define LINE_AREA_SIZE			15000.0f
+#define LINE_AREA_SIZE			10000.0f
 // ƒ‰ƒCƒ“‚Ì”
 #define LINE_NUM			50
 

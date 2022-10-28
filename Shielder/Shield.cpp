@@ -48,7 +48,9 @@ void Shield::Activate(const VECTOR& inPosition, const VECTOR& inDirection, const
 	position = inPosition;				//èÇÇÃà íuÇê›íË
 	direction = inDirection;			
 	prevDirection = inPrevDirection;
+	DistanceToPlyaer = VScale(prevDirection, SCALE_BY_DIRECTION_FOR_CORRECTION);
 	
+	MV1SetPosition(modelHandle, position);
 	MV1SetRotationYUseDir(modelHandle, prevDirection, 0.0f);
 }
 

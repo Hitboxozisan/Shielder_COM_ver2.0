@@ -90,11 +90,14 @@ void UiManager::StartBattleDraw()
 
 		//体幹ゲージ表示
 		DrawBox(195, 440, 195 + 240 * (frame / playerMaxTrunk), 455, GetColor(0, 255, 0), TRUE);			//プレイヤーの体幹ゲージ
-		DrawBox(35, 95, 35 + 570 * (frame / enemyMaxTrunk), 105, GetColor(0, 255, 0), TRUE);					//エネミーの体幹ゲージ
+		//DrawBox(35, 95, 35 + 570 * (frame / enemyMaxTrunk), 105, GetColor(0, 255, 0), TRUE);					//エネミーの一本体幹ゲージ
+		DrawBox(980, 90, 980 + 750 * (frame / enemyMaxTrunk), 110, GetColor(246, 200, 0), TRUE);					//エネミーの右側体幹ゲージ
+		DrawBox(980, 90, 980 + 750 * (-frame / enemyMaxTrunk), 110, GetColor(246, 200, 0), TRUE);					//エネミーの左側体幹ゲージ
 		//ゲージの枠を表示
 		DrawRotaGraph(950, 1000, 0.8, 0.0, imageHandle[PLAYER_TRUNK], TRUE);		//プレイヤーゲージ枠
 		DrawRotaGraph(980, 100, 0.8, 0.0, imageHandle[ENEMY_TRUNK], TRUE);		//エネミーゲージ枠
 	}
+
 }
 
 void UiManager::PlayerHpDraw(float characterHp)
@@ -115,12 +118,18 @@ void UiManager::TrunkGaugeDraw(float playerTrunk, float enemyTrunk)
 	float playerMaxTrunk = 100.0f;
 	float enemyMaxTrunk = 100.0f;
 
+	//色増加
+	int subGreen = enemyTrunk;
+
 	//DrawGraphF(200, 400, imageHandle[PLAYER_TRUNK], TRUE);
 	//DrawGraphF(200, 200, imageHandle[ENEMY_TRUNK], TRUE);
 
 	//体幹ゲージ表示
 	DrawBox(710, 990, 710 + 300 * (playerTrunk/playerMaxTrunk), 1015, GetColor(0, 255, 0), TRUE);			//プレイヤーの体幹ゲージ
-	DrawBox(220, 90, 225 + 1515 * (enemyTrunk/enemyMaxTrunk), 110, GetColor(0, 255, 0), TRUE);					//エネミーの体幹ゲージ
+	DrawBox(980, 90, 980 + 750 * (enemyTrunk/enemyMaxTrunk), 110, GetColor(246, 200 - subGreen, 0), TRUE);				//エネミーの右側体幹ゲージ
+	DrawBox(980, 90, 980 + 750 * (-enemyTrunk / enemyMaxTrunk), 110, GetColor(246, 200 - subGreen, 0), TRUE);			//エネミーの左側体幹ゲージ
+
+
 	//ゲージの枠を表示
 	DrawRotaGraph(950, 1000, 0.8, 0.0, imageHandle[PLAYER_TRUNK], TRUE);	//プレイヤー体幹ゲージ枠
 	DrawRotaGraph(980, 100, 0.8, 0.0, imageHandle[ENEMY_TRUNK], TRUE);		//エネミー体幹ゲージ枠

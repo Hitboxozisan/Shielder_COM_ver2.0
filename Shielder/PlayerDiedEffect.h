@@ -12,7 +12,7 @@ public:
 	void Finalize();
 	void Activate(VECTOR inPosition);
 	void Deactivate();
-	void Update();
+	void Update(VECTOR inPostion);
 	void Draw();
 private:
 	PlayerDiedEffect(const PlayerDiedEffect&);

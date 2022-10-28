@@ -2,23 +2,21 @@
 
 #include "EffectBase.h"
 
-class GuardEffect : public EffectBase
+class PlayerLaserEffect : public EffectBase
 {
 public:
-	GuardEffect();
-	~GuardEffect();
-	
+	PlayerLaserEffect();
+	~PlayerLaserEffect();
+
 	void Initialize();
 	void Finalize();
 	void Activate(VECTOR inPosition);
 	void Deactivate();
 	void Update(VECTOR inPostion);
 	void Draw();
-
 private:
-	//GuardEffect();
-	GuardEffect(const GuardEffect&);
-	void operator=(const GuardEffect&);
-	//~GuardEffect();
+	PlayerLaserEffect(const PlayerLaserEffect&);
+	void operator=(const PlayerLaserEffect&);
+
 };
 

@@ -9,7 +9,7 @@ public:
 	virtual void Finalize() = 0;
 	virtual void Activate(VECTOR inPosition) = 0;
 	virtual void Deactivate() = 0;
-	virtual void Update() = 0;
+	virtual void Update(VECTOR inPostion) = 0;
 	virtual void Draw() = 0;
 
 	bool GetExist() const;			//ë∂ç›ÇµÇƒÇ¢ÇÈÇ©Ç«Ç§Ç©

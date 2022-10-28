@@ -11,7 +11,7 @@ GuardEffect::~GuardEffect()
 
 void GuardEffect::Initialize()
 {
-	effectHandle = LoadEffekseerEffect("Data/Effect/Blow.efkefc", 15.0f);
+	effectHandle = LoadEffekseerEffect("Data/Effect/Blow.efkefc", 20.0f);
 	if (effectHandle == -1)
 	{
 		printfDx("読み込みに失敗_GuardEffect");
@@ -41,7 +41,7 @@ void GuardEffect::Deactivate()
 	exist = false;
 }
 
-void GuardEffect::Update()
+void GuardEffect::Update(VECTOR inPostion)
 {
 	//存在しないなら処理しない
 	if (exist == false)
@@ -55,8 +55,6 @@ void GuardEffect::Update()
 	{
 		playingEffectHandle = PlayEffekseer3DEffect(effectHandle);			//エフェクトを再生する
 	}
-
-	
 
 	//エフェクトを再生し終わったら
 	if (frame >= 60)

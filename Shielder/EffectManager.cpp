@@ -6,6 +6,7 @@
 #include "DamageEffect.h"
 #include "PlayerDiedEffect.h"
 #include "SmokeEffect.h"
+#include "RecoveryEffect.h"
 
 const int EffectManager::SMOKE_EFFECT_AMOUNT = 32;
 
@@ -39,6 +40,9 @@ void EffectManager::Initialize()
 
 	effects[2] = new PlayerDiedEffect();
 	effects[2]->Initialize();
+
+	effects[3] = new RecoveryEffect();
+	effects[3]->Initialize();
 
 	graphicEffects = new BillboardBase * [BILLBOARD_AMOUNT];
 
@@ -88,11 +92,11 @@ void EffectManager::Deactivate()
 	}
 }
 
-void EffectManager::Update()
+void EffectManager::Update(VECTOR inPostion)
 {
 	for (int i = 0; i < EFFECT_AMOUNT; ++i)
 	{
-		effects[i]->Update();
+		effects[i]->Update(inPostion);
 	}
 
 	for (int i = 0; i < BILLBOARD_AMOUNT; ++i)
@@ -164,6 +168,15 @@ void EffectManager::CreatePlayerDiedEffect(const VECTOR& inPosition)
 	if (effects[PLAYER_DEAD]->GetExist() == false)
 	{
 		effects[PLAYER_DEAD]->Activate(inPosition);
+		return;
+	}
+}
+
+void EffectManager::CreateRecoveryEffect(const VECTOR& inPosition)
+{
+	if (effects[RECOVERY]->GetExist() == false)
+	{
+		effects[RECOVERY]->Activate(inPosition);
 		return;
 	}
 }

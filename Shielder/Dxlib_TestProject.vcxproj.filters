@@ -143,6 +143,12 @@
     <ClCompile Include="ScreenFade.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="RecoveryEffect.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerLaserEffect.cpp">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h">
@@ -258,6 +264,12 @@
     </ClInclude>
     <ClInclude Include="ScreenFade.h">
       <Filter>ソース ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="RecoveryEffect.h">
+      <Filter>ソース ファイル\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerLaserEffect.h">
+      <Filter>ソース ファイル\Effect</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

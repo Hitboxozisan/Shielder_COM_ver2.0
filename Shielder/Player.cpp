@@ -116,6 +116,9 @@ void Player::Update()
 		(this->*pUpdate)();			//ó‘Ô‚²‚Æ‚ÌXVˆ—
 	}
 
+	//“–‚½‚è”»’è‚‚³’²®
+	collisionSphere.localCenter.y = 30.0f;
+
 	//‘Ì—Í‚ªs‚«‚½‚ç€–S‚·‚é
 	if (hitPoint <= 0.0f)
 	{
@@ -445,6 +448,7 @@ void Player::Rigor()
 /// </summary>
 void Player::InputAction()
 {
+	float deltatime = DeltaTime::GetInstace().GetDeltaTime();
 	inputDirection = ZERO_VECTOR;
 
 #ifdef DEBUG
@@ -490,7 +494,11 @@ void Player::InputAction()
 		shield->Deactivate();			//‚‚ğÁ–Å‚³‚¹‚é
 	}
 
-
+	//‰ñ•œ
+	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_SPACE))
+	{
+		
+	}
 	
 }
 
@@ -504,4 +512,14 @@ void Player::CreateShield()
 		shield->Activate(position, direction, prevDirection);		//‚‚ğ¶¬‚·‚é
 		state = DEFENSE;
 	}
+}
+
+/// <summary>
+/// HP‚ğˆê’è—Ê‚Ü‚Å‰ñ•œ
+/// </summary>
+void Player::Recovery()
+{
+	//ˆê’è—Ê‰ñ•œ
+	hitPoint;
+	//effectManager->CreateRecoveryEffect(position);
 }

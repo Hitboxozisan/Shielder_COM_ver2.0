@@ -7,6 +7,8 @@
 #include "KeyManager.h"
 
 const VECTOR Camera::CAMERA_INITIAL_POSITION = VGet(2000.0f, 80.0f, -1000.0f);
+const float Camera::CAMERA_CHANGE_SPEED = 10.0f;
+const float Camera::CAMERA_ZOOM_RANGE = 100.0f;
 const float Camera::CAMERA_LOOK_AT_HEIGHT = 300.0f;
 const float Camera::CAMERA_LOOK_AT_DISTANCE = 10.0f;
 const float Camera::CAMERA_FOV = 60.0f;
@@ -15,6 +17,7 @@ const float Camera::CAMERA_FAR = 1000.0f;
 const float Camera::CAMERA_OUTSIDE_RANGE = 500.0f;
 
 Camera::Camera()
+	:rangeOfCameraAndObject(0.0f)
 {
 }
 
@@ -24,6 +27,8 @@ Camera::~Camera()
 
 void Camera::Initialize()
 {
+	changeSpeed = CAMERA_CHANGE_SPEED;
+
 	vAngle = 0.0f;
 	hAngle = 0.0f;
 	float fov = CAMERA_FOV * DX_PI / 180.0f;
@@ -93,10 +98,15 @@ void Camera::Update(Character** character)
 	{
 		position.z -= 1;
 	}
-	
-	
 
-	//SetCameraPositionAndAngle(position, 0, 0, 0);
+	//エネミーが死んだ場合プレイヤーをズームする
+	/*if (character[1]->IsAlive())
+	{
+		SetCameraPositionAndTarget_UpVecY(position, targetPosition);
+		PlayerZoom(character);
+	}*/
+
+	SetCameraPositionAndAngle(position, 0, 0, 0);
 }
 
 void Camera::Finalize()
@@ -106,6 +116,28 @@ void Camera::Finalize()
 	{
 		printfDx("outside");
 	}*/
+}
 
+//ゲーム開始時にカメラを所定の位置まで移動させる
+void Camera::StartCamera(Character** character)
+{
 
+}
+
+//プレイヤーにズームする
+void Camera::PlayerZoom(Character** character)
+{
+	targetPosition = character[0]->GetPosition();
+	//距離を求める
+	rangeOfCameraAndObject = VSquareSize(position - targetPosition);
+	//速度を決定する
+	velocity = VNorm(position - targetPosition) * changeSpeed;
+
+	//カメラとズームする対象との距離が一定になるまでズーム
+	if (rangeOfCameraAndObject <= CAMERA_ZOOM_RANGE)
+	{
+		position = VAdd(position, velocity);
+	}
+
+	SetCameraPositionAndTarget_UpVecY(position, targetPosition);
 }

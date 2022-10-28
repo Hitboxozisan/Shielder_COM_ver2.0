@@ -1,31 +1,31 @@
 #include "Pch.h"
-#include "PlayerDiedEffect.h"
 
-PlayerDiedEffect::PlayerDiedEffect()
+#include "RecoveryEffect.h"
+
+RecoveryEffect::RecoveryEffect()
 {
 }
 
-PlayerDiedEffect::~PlayerDiedEffect()
+RecoveryEffect::~RecoveryEffect()
 {
 }
 
-void PlayerDiedEffect::Initialize()
+void RecoveryEffect::Initialize()
 {
-	//エフェクトの読み込み
-	effectHandle = LoadEffekseerEffect("Data/Effect/playerDied.efkefc", 15.0f);
+	effectHandle = LoadEffekseerEffect("Data/Effect/recovery.efkefc", 15.0);
 	if (effectHandle == -1)
 	{
-		printfDx("読み込みに失敗_playerDiedEffect");
+		printfDx("読み込みに失敗_RecoveryEffect");
 	}
 }
 
-void PlayerDiedEffect::Finalize()
+void RecoveryEffect::Finalize()
 {
 	//エフェクトを削除する
 	DeleteEffekseerEffect(effectHandle);
 }
 
-void PlayerDiedEffect::Activate(VECTOR inPosition)
+void RecoveryEffect::Activate(VECTOR inPosition)
 {
 	exist = true;
 	frame = 0;
@@ -36,12 +36,12 @@ void PlayerDiedEffect::Activate(VECTOR inPosition)
 	playingEffectHandle = -1;
 }
 
-void PlayerDiedEffect::Deactivate()
+void RecoveryEffect::Deactivate()
 {
 	exist = false;
 }
 
-void PlayerDiedEffect::Update(VECTOR inPostion)
+void RecoveryEffect::Update(VECTOR inPosition)
 {
 	//存在しないなら処理しない
 	if (exist == false)
@@ -56,7 +56,8 @@ void PlayerDiedEffect::Update(VECTOR inPostion)
 		playingEffectHandle = PlayEffekseer3DEffect(effectHandle);			//エフェクトを再生する
 	}
 
-
+	position = inPosition;				//エフェクト再生位置をプレイヤーの位置に
+	position.y = 50.0f;					//再生位置を補正
 
 	//エフェクトを再生し終わったら
 	if (frame >= 60)
@@ -67,7 +68,7 @@ void PlayerDiedEffect::Update(VECTOR inPostion)
 	SetPosPlayingEffekseer3DEffect(playingEffectHandle, position.x, position.y, position.z);
 }
 
-void PlayerDiedEffect::Draw()
+void RecoveryEffect::Draw()
 {
 	if (exist == false)
 	{

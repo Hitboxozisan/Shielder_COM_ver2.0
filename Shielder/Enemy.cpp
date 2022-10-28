@@ -11,22 +11,29 @@
 #include "ModelManager.h"
 #include "DeltaTime.h"
 
+#ifdef DEBUG
+
+#include"KeyManager.h"
+
+#endif // DEBUG
+
+
 const float Enemy::COLLIDE_RADIUS = 50.0f;
 const float Enemy::NORMAL_SPEED = 3.0f;
 const float Enemy::DEFENSE_SPEED = 2.0f;
 const float Enemy::KICK_SPEED = 20.0f;							
 const float Enemy::JUMP_DIRECTION_Y = -30.0f;
-const float Enemy::JUMP_HEIGHT = 700.0f;
+const float Enemy::JUMP_HEIGHT = 600.0f;
 const float Enemy::STOP_VELOCITY = 0.5f;
 const float Enemy::FRICTION_FORCE = 0.05f;
 const float Enemy::GRAVITY = 0.25f;
 const float Enemy::TRUNK_POINT = 100.0f;
 const float Enemy::INCREASE_TRUNK_POINT = 5.0f;
 const float Enemy::ASSAULT_MAGNIFICATION = 1.0f;
-const float Enemy::BULLET_MAGNIFICATION = 1.2;	
+const float Enemy::BULLET_MAGNIFICATION = 0.8;	
 const float Enemy::SLOW_BULLET_MAGNIFICATION = 0.3;
 const float Enemy::JUMPKICK_MAGNIFICATION = 0.5f;
-const float Enemy::SHOT_INTERVAL = 1.0f;
+const float Enemy::SHOT_INTERVAL = 0.5f;
 
 Enemy::Enemy(BulletCreater* const inBulletCreater)
 	:Character(inBulletCreater)
@@ -56,7 +63,7 @@ void Enemy::Initialize(EffectManager* const inEffectManager)
 {
 	vec = LEFT;
 	speed = NORMAL_SPEED;
-	trunkPoint = TRUNK_POINT;
+	trunkPoint = 0;
 	position = VGet(2400.0f, 1.0f, 100.0f);
 	nextPosition = position;
 	direction = ZERO_VECTOR;
@@ -88,6 +95,14 @@ void Enemy::Initialize(EffectManager* const inEffectManager)
 
 void Enemy::Update()
 {
+#ifdef DEBUG
+	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_RSHIFT))
+	{
+		trunkPoint = 99.0f;
+	}
+
+#endif // DEBUG
+
 	if (this->pUpdate != nullptr)
 	{
 		switch (physical)
@@ -104,8 +119,10 @@ void Enemy::Update()
 		}
 	}
 
+	collisionSphere.localCenter.y = 30.0f;
+
 	//体幹ゲージが0になったら死亡する
-	if (trunkPoint <= 0.0f)
+	if (trunkPoint >= 100.0f)
 	{
 		WaitTimer(0);
 		//エフェクト再生
@@ -125,6 +142,8 @@ void Enemy::Draw()
 	DrawFormatString(300, 190, GetColor(255, 255, 255), "Interval : %f", GetInterval(), TRUE);
 	DrawFormatString(300, 210, GetColor(255, 255, 255), "AT : %d", attackType);
 	DrawFormatString(300, 230, GetColor(255, 255, 255), "ShotCount : %d", shotCount);
+	DrawFormatString(300, 250, GetColor(255, 255, 255), "PrevType : %d", prevType);
+
 
 	//当たり判定デバック描画
 	DrawSphere3D(collisionSphere.worldCenter, collisionSphere.radius,
@@ -160,11 +179,11 @@ void Enemy::OnHitShield(const VECTOR& adjust, bool just)
 	//ジャストガードじゃなければ減少量を半減させる
 	if (isjust)
 	{
-		trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification;
+		trunkPoint += INCREASE_TRUNK_POINT * trunkMagnification;
 	}
 	else
 	{
-		trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification * 0.5;
+		trunkPoint += INCREASE_TRUNK_POINT * trunkMagnification * 0.5;
 	}
 	state = SLIDE;
 	pUpdate = &Enemy::UpdateSlide;
@@ -184,11 +203,11 @@ void Enemy::OnHitShieldWithBullet(const VECTOR& adjust, bool just)
 	//ジャストガードじゃなければ減少量を半減させる
 	if (isjust)
 	{
-		trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification;
+		trunkPoint += INCREASE_TRUNK_POINT * trunkMagnification;
 	}
 	else
 	{
-		trunkPoint -= INCREASE_TRUNK_POINT * trunkMagnification * 0.5;
+		trunkPoint += INCREASE_TRUNK_POINT * trunkMagnification * 0.5;
 	}
 }
 
@@ -313,7 +332,13 @@ void Enemy::Bullet()
 void Enemy::SlowBullet()
 {
 	shotInterval += DeltaTime::GetInstace().GetDeltaTime();
-	if (shotInterval >= SHOT_INTERVAL)
+	
+	//近ければ接近してくる
+	if (EnemyAi::GetInstance().RangeWithPlayerNear())
+	{
+		attackType = ASSAULT;
+	}
+	else if (shotInterval >= SHOT_INTERVAL)
 	{
 		CreateBullet();			//弾を生成
 		ShootBullet();			//弾を発射
@@ -433,7 +458,11 @@ void Enemy::Slide()
 		pUpdate = &Enemy::UpdateAttack;
 	}
 
-	nextPosition = VAdd(nextPosition, velocity);
+	//画面端なら必要以上進まないようにする
+	if (SCREEN_LEFTMOST + 10 <= nextPosition.x && SCREEN_RIGHTMOST - 10 >= nextPosition.x)
+	{
+		nextPosition = VAdd(nextPosition, velocity);
+	}
 }
 
 /// <summary>
@@ -473,7 +502,9 @@ void Enemy::SetNextAttack()
 	//乱数用変数
 	std::random_device rd;
 	std::mt19937 eng(rd());
-	std::uniform_int_distribution<int> next(0, ATTACK_AMOUST - 1);
+	std::uniform_int_distribution<int> next(0, ATTACK_AMOUST - 2);
+	int nextAttack;
+	AttackType at;
 
 	velocity = ZERO_VECTOR;
 	assaultCount = 0;			//突進回数をリセット
@@ -493,15 +524,17 @@ void Enemy::SetNextAttack()
 	else
 	{
 		shotCount = 0;				//発射回数をリセット
-		int nextAttack = next(eng);	//次の行動を指定
-		AttackType at = static_cast<AttackType>(nextAttack);	//列挙型に変換する
+		
+		nextAttack = next(eng);							//次の行動を指定
+		at = static_cast<AttackType>(nextAttack);		//列挙型に変換する
 		if (prevType == at || prevType == SLOW_BULLET)
 		{
 			nextAttack = next(eng);
 			at = static_cast<AttackType>(nextAttack);
 		}
-
+		
 		attackType = at;		//次の状態に移行する
+		
 	}
 }
 
@@ -582,6 +615,14 @@ void Enemy::UpdateNormal()
 
 void Enemy::UpdateAttack()
 {
+	if (attackType == ASSAULT ||
+		attackType == BULLET ||
+		attackType == SLOW_BULLET ||
+		attackType == JUMP)
+	{
+		prevType = attackType;
+	}
+
 	//各行動パターンに応じた行動処理
 	switch (attackType)
 	{

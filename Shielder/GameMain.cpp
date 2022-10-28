@@ -31,7 +31,7 @@ const string GameMain::FILENAME_EXTENSION = ".png";
 const int	GameMain::PLAYER_AMOUNT = 1;
 const int	GameMain::ENEMY_AMOUNT = 1;
 const int	GameMain::CHARACTER_AMOUNT = PLAYER_AMOUNT + ENEMY_AMOUNT;
-const float GameMain::MAX_BULLET_AMOUNT = 3;
+const float GameMain::MAX_BULLET_AMOUNT = 8;
 
 GameMain::GameMain(SceneManager* const sceneManager)
 	:SceneBase(sceneManager)
@@ -174,12 +174,9 @@ void GameMain::Update()
 
 void GameMain::Draw()
 {
-	
-
 	background->Draw();		//背景描画
 	uiManager->Draw(state, character[0]->GetHitPoint(), character[0]->GetTrunkPoint(), character[1]->GetTrunkPoint());
 
-	
 	for (auto itr = activeBullet.begin(); itr != activeBullet.end(); ++itr)
 	{
 		(*itr)->Draw();
@@ -207,6 +204,7 @@ void GameMain::Draw()
 	}
 
 	effectManager->Draw(character[0]->GetPosition());
+	
 
 	//UIデバッグ
 	DrawFormatString(50, 70, GetColor(255, 255, 255), "P::position.x : %f", character[0]->GetPosition().x);
@@ -265,15 +263,19 @@ void GameMain::UpdateGame()
 		pUpdate = &GameMain::UpdateGameOver;
 	}
 
-	effectManager->Update();
+	effectManager->Update(character[0]->GetPosition());
 	hitchecker->Check(character, character[0]->GetShieldPointer(), character[1]->GetBulletPointer());
 	camera->Update(character);
 }
 
 void GameMain::UpdateGameOver()
 {
-	
-	if (frame <= 200)
+	//エネミーが死んだ場合は演出を出す
+	if (character[1]->IsAlive() == false)
+	{
+		camera->PlayerZoom(character);
+	}
+	else if (frame <= 200)
 	{
 		//徐々に暗くしていく
 		alpha++;

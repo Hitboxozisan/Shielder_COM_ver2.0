@@ -95,5 +95,7 @@ private:
 	void Rigor();		//d’¼
 	void InputAction();
 	void CreateShield();
+
+	void Recovery();		//‰ñ•œ
 };
 

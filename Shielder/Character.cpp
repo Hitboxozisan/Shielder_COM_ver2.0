@@ -105,7 +105,7 @@ void Character::MoveFinish()
 const bool Character::IsCollidableState() const
 {
 	//–³“GŠÔ‚ğ‰ß‚¬‚½‚ç–³“Gó‘Ô‚ğ‰ğœ‚·‚é
-	if (invincibleTime >= 0.8f)
+	if (invincibleTime >= 0.5f)
 	{
 		return true;
 	}

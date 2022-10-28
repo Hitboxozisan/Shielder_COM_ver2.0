@@ -41,7 +41,7 @@ void DamageEffect::Deactivate()
 	exist = false;
 }
 
-void DamageEffect::Update()
+void DamageEffect::Update(VECTOR inPostion)
 {
 	//‘¶İ‚µ‚È‚¢‚È‚çˆ—‚µ‚È‚¢
 	if (exist == false)

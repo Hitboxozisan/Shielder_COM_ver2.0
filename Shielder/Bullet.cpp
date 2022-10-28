@@ -4,7 +4,7 @@
 
 #include "ModelManager.h"
 
-const float Bullet::NORMAL_SPEED = 14.0f;
+const float Bullet::NORMAL_SPEED = 13.0f;
 const float Bullet::SLOW_SPEED = 5.0f;
 const float Bullet::SCALE_BY_DIRECTION_FOR_CORRECTION = 5.0f;
 const float Bullet::COLLIDE_RADIUS = 50.0f;
