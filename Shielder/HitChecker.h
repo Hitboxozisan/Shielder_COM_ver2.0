@@ -12,14 +12,14 @@ public:
 	HitChecker(int inCharacaterAmount);
 	~HitChecker();
 
-	void Check(Character **character, Shield *shield, Bullet *bullet);
+	void Check(Character **character, Shield *shield, std::list<Bullet*>* bullett);
 
 private:
 
 	void ShieldAndCharacter(Character** character, Shield *shield);
 	void CharacterAndCharacter(Character** character);
-	void ShieldAndBullet(Character** character, Shield* shield, Bullet* bullet);
-	void CharacterAndBullet(Character** character, Bullet* bullet);
+	void ShieldAndBullet(Character** character, Shield* shield, std::list<Bullet*>* bullet);
+	void CharacterAndBullet(Character** character, std::list<Bullet*>* bullet);
 
 	int characterAmount;
 	int hitStopTime;

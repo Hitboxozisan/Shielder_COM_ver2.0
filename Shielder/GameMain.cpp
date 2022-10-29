@@ -98,7 +98,7 @@ void GameMain::Initialize()
 	//“G‚Ì’e
 	for (int i = 0; i < MAX_BULLET_AMOUNT; ++i)
 	{
-		deactiveBullet.push_back(new Bullet());
+		deactiveBullet.push_back( new Bullet() );
 		deactiveBullet.back()->Initialize();
 	}
 	
@@ -269,7 +269,7 @@ void GameMain::UpdateGame()
 	}
 
 	effectManager->Update(character[0]->GetPosition());
-	hitchecker->Check(character, character[0]->GetShieldPointer(), character[1]->GetBulletPointer());
+	hitchecker->Check(character, character[0]->GetShieldPointer(), &activeBullet);
 	camera->Update(character);
 }
 

@@ -18,7 +18,7 @@ HitChecker::~HitChecker()
 {
 }
 
-void HitChecker::Check(Character** character, Shield *shield, Bullet* bullet)
+void HitChecker::Check(Character** character, Shield *shield, std::list<Bullet*>* bullet)
 {
 	CharacterAndCharacter(character);
 	ShieldAndCharacter(character, shield);
@@ -99,32 +99,35 @@ void HitChecker::CharacterAndCharacter(Character** character)
 /// </summary>
 /// <param name="character"></param>
 /// <param name="bullet"></param>
-void HitChecker::ShieldAndBullet(Character** character, Shield* shield, Bullet* bullet)
+void HitChecker::ShieldAndBullet(Character** character, Shield* shield, std::list<Bullet*>* bullet)
 {
-	//–hŒä‚µ‚Ä‚¢‚é‚©‚Â’e‚ª‘¶Ý‚µ‚Ä‚¢‚é‚È‚çˆ—‚·‚é
-	if (shield->GetState() != ShieldState::NONE && bullet != nullptr)
+	for (auto itr = bullet->begin(); itr != bullet->end(); ++itr)
 	{
-		VECTOR shieldPos = character[0]->GetPosition();
-		shieldPos.y = 0.0f;
-
-		VECTOR bulletPos = bullet->GetPosition();
-		bulletPos.y = 0.0f;
-
-		VECTOR sub = VSub(shieldPos, bulletPos);
-		//sub.y = 0.0f;
-
-		float length = VSize(sub);
-
-		if (HitCheck_Sphere_Sphere(shield->GetPosition(), shield->GetCollisionRadius(),
-			bullet->GetPosition(), bullet->GetCollisionRadius()) &&
-			character[0]->IsCollidableState() && bullet->IsCollidableState())
+		//–hŒä‚µ‚Ä‚¢‚é‚©‚Â’e‚ª‘¶Ý‚µ‚Ä‚¢‚é‚È‚çˆ—‚·‚é
+		if (shield->GetState() != ShieldState::NONE && bullet != nullptr)
 		{
-			sub = VScale(sub, 1.0f);		//‚«”ò‚Î‚·•ûŒü‚Í‹t•ûŒü
-			VECTOR forceDirection = VNorm(sub);
-			character[0]->OnHitShield(forceDirection, character[0]->IsJust());
-			character[1]->OnHitShieldWithBullet(forceDirection, character[0]->IsJust());
-			bullet->OnHitBreak();
-			WaitTimer(hitStopTime);				//ƒqƒbƒgƒXƒgƒbƒv
+			VECTOR shieldPos = character[0]->GetPosition();
+			shieldPos.y = 0.0f;
+
+			VECTOR bulletPos = (*itr)->GetPosition();
+			bulletPos.y = 0.0f;
+
+			VECTOR sub = VSub(shieldPos, bulletPos);
+			//sub.y = 0.0f;
+
+			float length = VSize(sub);
+
+			if (HitCheck_Sphere_Sphere(shield->GetPosition(), shield->GetCollisionRadius(),
+				(*itr)->GetPosition(), (*itr)->GetCollisionRadius()) &&
+				character[0]->IsCollidableState() && (*itr)->IsCollidableState())
+			{
+				sub = VScale(sub, 1.0f);		//‚«”ò‚Î‚·•ûŒü‚Í‹t•ûŒü
+				VECTOR forceDirection = VNorm(sub);
+				character[0]->OnHitShield(forceDirection, character[0]->IsJust());
+				character[1]->OnHitShieldWithBullet(forceDirection, character[0]->IsJust());
+				(*itr)->OnHitBreak();
+				WaitTimer(hitStopTime);				//ƒqƒbƒgƒXƒgƒbƒv
+			}
 		}
 	}
 }
@@ -134,30 +137,33 @@ void HitChecker::ShieldAndBullet(Character** character, Shield* shield, Bullet* 
 /// </summary>
 /// <param name="character"></param>
 /// <param name="bullet"></param>
-void HitChecker::CharacterAndBullet(Character** character, Bullet* bullet)
+void HitChecker::CharacterAndBullet(Character** character, std::list<Bullet*>* bullet)
 {
-	if (bullet != nullptr)
+	for (auto itr = bullet->begin(); itr != bullet->end(); ++itr)
 	{
-		VECTOR characterPos = character[0]->GetPosition();
-		characterPos.y = 0.0f;
-
-		VECTOR characterOtherPos = character[1]->GetPosition();
-		characterOtherPos.y = 0.0f;
-
-		VECTOR sub = VSub(characterPos, characterOtherPos);
-		//sub.y = 0.0f;
-
-		float length = VSize(sub);
-
-		if (HitCheck_Sphere_Sphere(character[0]->GetPosition(), character[0]->GetCollisionRadius(),
-			bullet->GetPosition(), bullet->GetCollisionRadius()) &&
-			character[0]->IsCollidableState() && bullet->IsCollidableState())
+		if (bullet != nullptr)
 		{
-			sub = VScale(sub, 1.0f);		//‚«”ò‚Î‚·•ûŒü‚Í‹t•ûŒü
-			VECTOR forceDirection = VNorm(sub);
-			character[0]->OnHitOtherCharacter(forceDirection, character[0]->IsJust());
-			bullet->OnHitBreak();
-			WaitTimer(hitStopTime);			//ƒqƒbƒgƒXƒgƒbƒv
+			VECTOR characterPos = character[0]->GetPosition();
+			characterPos.y = 0.0f;
+
+			VECTOR characterOtherPos = character[1]->GetPosition();
+			characterOtherPos.y = 0.0f;
+
+			VECTOR sub = VSub(characterPos, characterOtherPos);
+			//sub.y = 0.0f;
+
+			float length = VSize(sub);
+
+			if (HitCheck_Sphere_Sphere(character[0]->GetPosition(), character[0]->GetCollisionRadius(),
+				(*itr)->GetPosition(), (*itr)->GetCollisionRadius()) &&
+				character[0]->IsCollidableState() && (*itr)->IsCollidableState())
+			{
+				sub = VScale(sub, 1.0f);		//‚«”ò‚Î‚·•ûŒü‚Í‹t•ûŒü
+				VECTOR forceDirection = VNorm(sub);
+				character[0]->OnHitOtherCharacter(forceDirection, character[0]->IsJust());
+				(*itr)->OnHitBreak();
+				WaitTimer(hitStopTime);			//ƒqƒbƒgƒXƒgƒbƒv
+			}
 		}
 	}
 }
