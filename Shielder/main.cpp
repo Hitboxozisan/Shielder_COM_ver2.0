@@ -1,4 +1,5 @@
 #include "Pch.h"
+#include "Fps.h"
 
 #include "GuardEffect.h"
 
@@ -61,6 +62,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	ModelManager::GetInstance();
 
+	Fps* fps;
+	fps = new Fps;
 	SceneManager* sceneManager = new SceneManager();
 	sceneManager->Initialize();
 
@@ -69,13 +72,16 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
 	{
+		//フレームレート関係（一時的なものいずれdeltaTimeに変更）
+		//fps->Update();
+
 		//deltaTimeの計測
 		float deltaTime;
 		nowCount = GetNowCount();
 		deltaTime = (nowCount - prevCount) / 1000.0f;
+		prevCount = nowCount;
 		DeltaTime::GetInstace().SetDeltaTime(deltaTime);
 		KeyManager::GetInstance().Update();		//入力処理
-
 		sceneManager->Update();					//各シーンに応じた更新処理
 		
 		//画面更新処理
@@ -83,6 +89,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	
 
 		sceneManager->Draw();					//各シーンに応じた描画処理
+		//fps->Draw();							//フレームレート描画
+		DrawFormatString(300, 300, GetColor(255, 255, 255), "Getdelta : %f", DeltaTime::GetInstace().GetDeltaTime());
+		DrawFormatString(300, 320, GetColor(255, 255, 255), "delta : %f", deltaTime);
 
 #ifdef DEBUG
 		
@@ -100,7 +109,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			Pos2 = VGet(-LINE_AREA_SIZE / 2.0f, 0.0f, LINE_AREA_SIZE / 2.0f);
 			for (i = 0; i <= LINE_NUM; i++)
 			{
-				DrawLine3D(Pos1, Pos2, GetColor(255, 255, 255));
+				DrawLine3D(Pos1, Pos2, GetColor(255, 0, 0));
 				Pos1.x += LINE_AREA_SIZE / LINE_NUM;
 				Pos2.x += LINE_AREA_SIZE / LINE_NUM;
 			}
@@ -109,7 +118,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			Pos2 = VGet(LINE_AREA_SIZE / 2.0f, 0.0f, -LINE_AREA_SIZE / 2.0f);
 			for (i = 0; i < LINE_NUM; i++)
 			{
-				DrawLine3D(Pos1, Pos2, GetColor(255, 255, 255));
+				DrawLine3D(Pos1, Pos2, GetColor(255, 0, 0));
 				Pos1.z += LINE_AREA_SIZE / LINE_NUM;
 				Pos2.z += LINE_AREA_SIZE / LINE_NUM;
 			}
@@ -118,7 +127,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 
 		ScreenFlip();
-		prevCount = nowCount;
+		//fps->Wait();					//待機
 	}
 
 	//Effekseerを終了する

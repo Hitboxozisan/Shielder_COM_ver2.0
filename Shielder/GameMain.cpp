@@ -18,6 +18,7 @@
 #include "BulletCreater.h"
 #include "EnemyAi.h"
 #include "Background.h"
+#include "Field.h"
 #include "UiManager.h"
 #include "EffectManager.h"
 #include "GuardEffect.h"
@@ -31,7 +32,7 @@ const string GameMain::FILENAME_EXTENSION = ".png";
 const int	GameMain::PLAYER_AMOUNT = 1;
 const int	GameMain::ENEMY_AMOUNT = 1;
 const int	GameMain::CHARACTER_AMOUNT = PLAYER_AMOUNT + ENEMY_AMOUNT;
-const float GameMain::MAX_BULLET_AMOUNT = 5;
+const float GameMain::MAX_BULLET_AMOUNT = 8;
 
 GameMain::GameMain(SceneManager* const sceneManager)
 	:SceneBase(sceneManager)
@@ -105,6 +106,8 @@ void GameMain::Initialize()
 	background = new Background;
 	background->Initialize();
 
+	field = new Field;
+	field->Initialize();
 	
 	//UIŠÇ—ƒNƒ‰ƒX
 	uiManager = new UiManager;
@@ -176,6 +179,8 @@ void GameMain::Draw()
 {
 	background->Draw();		//”wŒi•`‰æ
 	uiManager->Draw(state, character[0]->GetHitPoint(), character[0]->GetTrunkPoint(), character[1]->GetTrunkPoint());
+
+	field->Draw();
 
 	for (auto itr = activeBullet.begin(); itr != activeBullet.end(); ++itr)
 	{

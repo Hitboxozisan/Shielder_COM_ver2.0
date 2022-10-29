@@ -12,6 +12,7 @@ class HitChecker;
 class Bullet;
 class BulletCreater;
 class Background;
+class Field;
 class EffectManager;
 class GuardEffect;
 class UiManager;
@@ -58,6 +59,7 @@ private:
 	Camera* camera;
 	Character** character;
 	Background* background;
+	Field* field;
 	HitChecker* hitchecker;
 	BulletCreater* bulletCreater;
 	GuardEffect* guardEffect;

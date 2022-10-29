@@ -2,7 +2,7 @@
 #include "ModelManager.h"
 
 const string ModelManager::MODEL_FOLDER_PATH = "Data/Model/";
-const string ModelManager::FIELD_PATH = "Map/TestMap.mv1";
+const string ModelManager::FIELD_PATH = "Field/TestField.mv1";
 const string ModelManager::PLAYER_PATH = "Player/TestPlayer.mv1";
 const string ModelManager::ENEMY_PATH = "Enemy/TestEnemy.mv1";
 const string ModelManager::SHIELD_PATH = "Shield/Shield.mv1";
@@ -41,6 +41,9 @@ void ModelManager::LoadAllModel()
 
 	fullPath = MODEL_FOLDER_PATH + BULLET_PATH;
 	modelHandle[BULLET] = MV1LoadModel(fullPath.c_str());
+
+	fullPath = MODEL_FOLDER_PATH + FIELD_PATH;
+	modelHandle[FIELD] = MV1LoadModel(fullPath.c_str());
 
 	for (int i = 0; i < MODEL_AMOUNT; ++i)
 	{

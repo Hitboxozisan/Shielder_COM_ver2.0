@@ -453,7 +453,7 @@ void Player::InputAction()
 
 #ifdef DEBUG
 	//スペースキーで死亡
-	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_SPACE))
+	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_P))
 	{
 		hitPoint = 0;
 	}
@@ -477,7 +477,8 @@ void Player::InputAction()
 	}
 
 	//防御
-	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_LSHIFT))
+	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_LSHIFT) || 
+		KeyManager::GetInstance().CheckPressed(KEY_INPUT_SPACE))
 	{
 		speed = DEFENSE_SPEED;
 		//isDefense = true;		//防御

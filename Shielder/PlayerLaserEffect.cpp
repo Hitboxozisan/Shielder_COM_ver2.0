@@ -35,6 +35,8 @@ void PlayerLaserEffect::Activate(VECTOR inPosition)
 	position.y = 50.0f;
 	position.z = 0.0f;
 	playingEffectHandle = -1;
+
+	SpecificEnemyPosition(inPosition);
 }
 
 void PlayerLaserEffect::Deactivate()
@@ -54,12 +56,20 @@ void PlayerLaserEffect::Update(VECTOR inPostion)
 
 	if (frame <= 1)
 	{
-		
 		playingEffectHandle = PlayEffekseer3DEffect(effectHandle);			//エフェクトを再生する
+		SetSpeedPlayingEffekseer3DEffect(playingEffectHandle, 0.2);			//エフェクトの再生速度を設定する
+		//SetRotationPlayingEffekseer3DEffect(playingEffectHandle, 0, 90, 0);
+		
+	}
+	//一定時間経過後再生速度を戻す
+	if (frame == 300)
+	{
+		SetSpeedPlayingEffekseer3DEffect(playingEffectHandle, 1.0);
+		SetScalePlayingEffekseer3DEffect(playingEffectHandle, 3.0f, 3.0f, 3.0f);
 	}
 
 	//エフェクトを再生し終わったら
-	if (frame >= 60)
+	if (frame >= 1000)
 	{
 		Deactivate();
 	}
@@ -76,4 +86,11 @@ void PlayerLaserEffect::Draw()
 
 	UpdateEffekseer3D();
 	DrawEffekseer3D();
+}
+
+//エネミーの位置を特定
+//レーザーを発射する位置を角度
+void PlayerLaserEffect::SpecificEnemyPosition(VECTOR inPosition)
+{
+	return;
 }

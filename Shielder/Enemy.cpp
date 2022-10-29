@@ -296,7 +296,7 @@ void Enemy::Assault()
 	}
 
 	//3回突進したら次の行動に移る
-	if (assaultCount >= 3.0f)
+	if (assaultCount >= 4.0f)
 	{
 		attackType = JUDGE;
 	}
@@ -312,6 +312,7 @@ void Enemy::Assault()
 void Enemy::Bullet()
 {
 	shotInterval += DeltaTime::GetInstace().GetDeltaTime();
+
 	if (shotInterval >= SHOT_INTERVAL)
 	{
 		CreateBullet();			//弾を生成
@@ -400,7 +401,6 @@ void Enemy::Kick()
 /// </summary>
 void Enemy::Back()
 {
-	
 	float rightPos = SCREEN_RIGHTMOST - 1.0f;
 	float leftPos = SCREEN_LEFTMOST + 1.0f;
 
@@ -512,12 +512,13 @@ void Enemy::SetNextAttack()
 	position.y = 0.0f;
 	nextPosition.y = 0.0f;
 
+
 	//次の状態を指定（テスト用）
-	/*attackType = JUMP;
+	/*attackType = BULLET;
 	return;*/
 
 	//前回の行動がSLOW_BULLETかつ規定数撃っていない場合
-	if (prevType == SLOW_BULLET && shotCount <= 2.0f)
+	if (prevType == SLOW_BULLET && shotCount <= 3.0f)
 	{
 		attackType = SLOW_BULLET;
 	}
