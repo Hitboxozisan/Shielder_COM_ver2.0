@@ -31,7 +31,7 @@ void EffectBase::Deactivate()
 {
 }
 
-void EffectBase::Update(VECTOR inPostion)
+void EffectBase::Update(VECTOR inPostion, VECTOR inEnemyPosition)
 {
 }
 

@@ -21,6 +21,7 @@
 #include "Field.h"
 #include "UiManager.h"
 #include "EffectManager.h"
+#include "SoundManager.h"
 #include "GuardEffect.h"
 #include "Result.h"
 
@@ -40,6 +41,8 @@ GameMain::GameMain(SceneManager* const sceneManager)
 	,pUpdate(nullptr)
 	,frame()
 	,alpha()
+	,pushEnterAlpha()
+	,alphaAdd(1)
 {
 }
 
@@ -58,18 +61,13 @@ void GameMain::Initialize()
 
 	//画像読み込み（ここはあとで別クラスで処理させるべきか）
 	resultImageHandle = LoadGraph(fullpath.c_str());
+	pushEnterHandle = LoadGraph("Data/Image/Push_Enter.png");			//後で上記と統一
 	if (resultImageHandle < 0)
 	{
 		printfDx("読み込みに失敗_imageHandle");
 	}
 	//新しいフォントデータを作成
 	fontHandle = CreateFontToHandle("Molot", 100, 1, DX_FONTTYPE_ANTIALIASING);
-
-
-	//カメラクラス
- 	camera = new Camera();
-	camera->Initialize();
-	camera->SetPosition(character);
 
 	//エフェクト管理クラス
 	effectManager = new EffectManager();
@@ -102,6 +100,11 @@ void GameMain::Initialize()
 		deactiveBullet.back()->Initialize();
 	}
 	
+	//カメラクラス
+	camera = new Camera();
+	camera->Initialize();
+	camera->SetPosition(character);
+
 	//背景クラス
 	background = new Background;
 	background->Initialize();
@@ -134,8 +137,6 @@ void GameMain::Activate()
 	{
 		character[i]->Initialize(effectManager);
 	}
-
-	//guardEffect->Activate(character[0]->GetPosition());
 
 	state = START;
 	pUpdate = &GameMain::UpdateStart;
@@ -170,7 +171,9 @@ void GameMain::Update()
 		(this->*pUpdate)();	//状態ごとの更新処理
 	}
 
+	
 	//guardEffect->Update();
+	//background->Update();
 
 	++frame;
 }
@@ -178,9 +181,10 @@ void GameMain::Update()
 void GameMain::Draw()
 {
 	background->Draw();		//背景描画
+	field->Draw();			//フィールド描画
+
 	uiManager->Draw(state, character[0]->GetHitPoint(), character[0]->GetTrunkPoint(), character[1]->GetTrunkPoint());
 
-	field->Draw();
 
 	for (auto itr = activeBullet.begin(); itr != activeBullet.end(); ++itr)
 	{
@@ -205,12 +209,21 @@ void GameMain::Draw()
 	{
 		//リザルト画像描画
 		DrawExtendGraph(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, resultImageHandle, TRUE);
-		DrawFormatStringToHandle(1400, 800, GetColor(255, 255, 255), fontHandle,  "%d", totalScore);
+		pushEnterAlpha += alphaAdd;						//徐々に透明にする
+		if (pushEnterAlpha == 0 || pushEnterAlpha == 255)
+		{
+			alphaAdd = -alphaAdd;
+		}
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, pushEnterAlpha);
+		DrawExtendGraph(0, 0, SCREEN_WIDTH - 1, SCREEN_HEIGHT - 1, pushEnterHandle, TRUE);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, pushEnterAlpha);
+		DrawFormatStringToHandle(1100, 400, GetColor(255, 255, 255), fontHandle, "%d", lifeScore);
+		DrawFormatStringToHandle(1100, 560, GetColor(255, 255, 255), fontHandle, "%d", trunkScore);
+		DrawFormatStringToHandle(1100, 870, GetColor(255, 255, 255), fontHandle,  "%d", totalScore);
 	}
 
 	effectManager->Draw(character[0]->GetPosition());
 	
-
 	//UIデバッグ
 	DrawFormatString(50, 70, GetColor(255, 255, 255), "P::position.x : %f", character[0]->GetPosition().x);
 	DrawFormatString(50, 90, GetColor(255, 255, 255), "E::position.x : %f", character[1]->GetPosition().x);
@@ -229,6 +242,8 @@ void GameMain::UpdateStart()
 {
 	if (frame > 100)
 	{
+		SoundManager::GetInstance().PlayBgm( SoundManager::MAIN, false);
+		//camera->StartCamera(character);
 		frame = 0;
 		state = GAME;
 		pUpdate = &GameMain::UpdateGame;
@@ -268,7 +283,7 @@ void GameMain::UpdateGame()
 		pUpdate = &GameMain::UpdateGameOver;
 	}
 
-	effectManager->Update(character[0]->GetPosition());
+	effectManager->Update(character[0]->GetPosition(), character[1]->GetPosition());
 	hitchecker->Check(character, character[0]->GetShieldPointer(), &activeBullet);
 	camera->Update(character);
 }
@@ -276,20 +291,25 @@ void GameMain::UpdateGame()
 void GameMain::UpdateGameOver()
 {
 	//エネミーが死んだ場合は演出を出す
-	if (character[1]->IsAlive() == false)
-	{
-		//camera->PlayerZoom(character);
-		effectManager->CreatePlayerLaser(character[0]->GetPosition());
-	}
-	else if (frame <= 200)
+	//if (character[1]->IsAlive() == false)
+	//{
+	//	//camera->PlayerZoom(character);
+	//	effectManager->CreatePlayerLaser(character[0]->GetPosition());
+	//	if (frame >= 850)
+	//	{
+	//		alpha++;
+	//	}
+	//}
+
+	if (frame <= 300 || character[1]->IsAlive() == false)
 	{
 		//徐々に暗くしていく
 		alpha++;
-		//SetDrawBright(255 - frame, 255 - frame, 255 - frame);
 	}
-	else
+
+	//alpah値を増加させたら
+	if(alpha >= 200)
 	{
-		
 		state = RESULT;
 		frame = 0;
 		pUpdate = &GameMain::UpdateResult;
@@ -297,7 +317,7 @@ void GameMain::UpdateGameOver()
 		//return;
 	}
 	
-	effectManager->Update(character[0]->GetPosition());
+	effectManager->Update(character[0]->GetPosition(), character[1]->GetPosition());
 }
 
 void GameMain::UpdateResult()
@@ -308,20 +328,36 @@ void GameMain::UpdateResult()
 	std::uniform_int_distribution<int> next(0, 999999999 - 1);
 
 	//一定フレーム経過するまで
+	//各スコアをランダムな数値を表示させる
+	//フレームで判断ではなくカウントで判断のほうが良いかも
 	if (frame <= 240)
 	{
 		lifeScore = next(eng);
-		destroyScore = next(eng);
+		trunkScore = next(eng);
+		totalScore = next(eng);
+	}
+	else if (frame <= 300)
+	{
+		//SoundManager::GetInstance().SetSePlayFlag(SoundManager::DECIDE_SCORE);
+		lifeScore = character[0]->GetHitPoint() * 15000;
+		trunkScore = next(eng);
+		totalScore = next(eng);
+	}
+	else if (frame <= 360)
+	{
+		SoundManager::GetInstance().SetSePlayFlag(SoundManager::DECIDE_SCORE);
+		trunkScore = character[1]->GetTrunkPoint() * 20000;
 		totalScore = next(eng);
 	}
 	else
 	{
-		totalScore = lifeScore + destroyScore;
+		//SoundManager::GetInstance().SetSePlayFlag(SoundManager::DECIDE_SCORE);
+		totalScore = lifeScore + trunkScore;
 	}
 
 
 	//スペースキーもしくは一定時間経過でタイトル画面に移行する
-	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_ESCAPE) ||
+	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_RETURN) ||
 		frame >= 1200)
 	{
 		Deactivate();

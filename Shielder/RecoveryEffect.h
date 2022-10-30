@@ -12,7 +12,7 @@ public:
 	void Finalize();
 	void Activate(VECTOR inPosition);
 	void Deactivate();
-	void Update(VECTOR inPosition);
+	void Update(VECTOR inPosition, VECTOR inEnemyPosition);
 	void Draw();
 private:
 	RecoveryEffect(const RecoveryEffect&);

@@ -41,7 +41,7 @@ void GuardEffect::Deactivate()
 	exist = false;
 }
 
-void GuardEffect::Update(VECTOR inPostion)
+void GuardEffect::Update(VECTOR inPostion, VECTOR inEnemyPosition)
 {
 	//‘¶İ‚µ‚È‚¢‚È‚çˆ—‚µ‚È‚¢
 	if (exist == false)

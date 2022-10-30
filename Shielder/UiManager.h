@@ -21,6 +21,7 @@ private:
 	void StartBattleDraw();
 	void PlayerHpDraw(float characterHp);
 	void TrunkGaugeDraw(float playerTrunk, float enemyTrunk);
+	void DrawRecoveryIcon();
 	void DrawTitle();
 	
 	static const std::string GRAPHIC_FOLDER_PATH;
@@ -32,6 +33,7 @@ private:
 		PLAYER_HP,
 		PLAYER_TRUNK,
 		ENEMY_TRUNK,
+		RECOVERY,
 		IMAGE_AMOUNT
 	};
 

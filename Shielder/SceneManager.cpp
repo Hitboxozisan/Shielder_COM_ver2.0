@@ -1,3 +1,4 @@
+
 #include "SceneManager.h"
 
 #include "GameMain.h"
@@ -83,6 +84,7 @@ void SceneManager::ChangeScene()
 	{
 		return;
 	}
+
 	currentPointer->Deactivate();
 	currentPointer = eachScenes[nextScene];
 	currentScene = nextScene;

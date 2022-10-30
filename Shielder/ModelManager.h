@@ -7,7 +7,7 @@ using namespace std;
 class ModelManager final
 {
 public:
-
+	//ƒ‚ƒfƒ‹‚ÌŽí—Þ
 	enum ModelKind
 	{
 		FIELD = 0,

@@ -39,6 +39,7 @@ private:
 	static const float  CAMERA_FAR;					//カメラの描画範囲（奥）
 	static const float  CAMERA_OUTSIDE_RANGE;		//カメラが離れる距離
 
+	VECTOR mainCameraPosition;		//ゲーム画面のカメラの最終位置
 	VECTOR position;
 	VECTOR velocity;				//速度、加速度、向き
 	VECTOR targetPosition;

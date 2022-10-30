@@ -26,6 +26,8 @@ void UiManager::Initialize()
 	string path = GRAPHIC_FOLDER_PATH + UI_GRAPHIC_PATH;
 	string fullPath = path;
 
+	frame = 0;
+
 	for (int i = 0; i < IMAGE_AMOUNT; ++i)
 	{
 		fullPath = path + std::to_string(i) + FILENAME_EXTENSION;
@@ -56,13 +58,14 @@ void UiManager::Draw(GameMain::State state, float characterHp, float playerTrunk
 	{
 	case GameMain::START:
 		StartBattleDraw();
+		DrawRecoveryIcon();
 		break;
 	case GameMain::GAME:
 		PlayerHpDraw(characterHp);
 		TrunkGaugeDraw(playerTrunk, enemyTrunk);
+		DrawRecoveryIcon();
 		break;
 	case GameMain::GAME_OVER:
-
 		break;
 	case GameMain::RESULT:
 
@@ -89,13 +92,13 @@ void UiManager::StartBattleDraw()
 		DrawRotaGraph(300, 1000, 0.8, 0.0, imageHandle[PLAYER_HP], TRUE);
 
 		//体幹ゲージ表示
-		DrawBox(195, 440, 195 + 240 * (frame / playerMaxTrunk), 455, GetColor(0, 255, 0), TRUE);			//プレイヤーの体幹ゲージ
+		//DrawBox(195, 440, 195 + 240 * (frame / playerMaxTrunk), 455, GetColor(0, 255, 0), TRUE);			//プレイヤーの体幹ゲージ
 		//DrawBox(35, 95, 35 + 570 * (frame / enemyMaxTrunk), 105, GetColor(0, 255, 0), TRUE);					//エネミーの一本体幹ゲージ
-		DrawBox(980, 90, 980 + 750 * (frame / enemyMaxTrunk), 110, GetColor(246, 200, 0), TRUE);					//エネミーの右側体幹ゲージ
-		DrawBox(980, 90, 980 + 750 * (-frame / enemyMaxTrunk), 110, GetColor(246, 200, 0), TRUE);					//エネミーの左側体幹ゲージ
+		DrawBox(985, 90, 980 + 750 * (frame / enemyMaxTrunk), 110, GetColor(246, 200, 0), TRUE);					//エネミーの右側体幹ゲージ
+		DrawBox(975, 90, 980 + 750 * (-frame / enemyMaxTrunk), 110, GetColor(246, 200, 0), TRUE);					//エネミーの左側体幹ゲージ
 		//ゲージの枠を表示
-		DrawRotaGraph(950, 1000, 0.8, 0.0, imageHandle[PLAYER_TRUNK], TRUE);		//プレイヤーゲージ枠
-		DrawRotaGraph(980, 100, 0.8, 0.0, imageHandle[ENEMY_TRUNK], TRUE);		//エネミーゲージ枠
+		//DrawRotaGraph(950, 1000, 0.8, 0.0, imageHandle[PLAYER_TRUNK], TRUE);		//プレイヤーゲージ枠
+		DrawRotaGraph(957, 100, 0.8, 0.0, imageHandle[ENEMY_TRUNK], TRUE);		//エネミーゲージ枠
 	}
 
 }
@@ -125,15 +128,23 @@ void UiManager::TrunkGaugeDraw(float playerTrunk, float enemyTrunk)
 	//DrawGraphF(200, 200, imageHandle[ENEMY_TRUNK], TRUE);
 
 	//体幹ゲージ表示
-	DrawBox(710, 990, 710 + 300 * (playerTrunk/playerMaxTrunk), 1015, GetColor(0, 255, 0), TRUE);			//プレイヤーの体幹ゲージ
-	DrawBox(980, 90, 980 + 750 * (enemyTrunk/enemyMaxTrunk), 110, GetColor(246, 200 - subGreen, 0), TRUE);				//エネミーの右側体幹ゲージ
-	DrawBox(980, 90, 980 + 750 * (-enemyTrunk / enemyMaxTrunk), 110, GetColor(246, 200 - subGreen, 0), TRUE);			//エネミーの左側体幹ゲージ
+	//DrawBox(710, 990, 710 + 300 * (playerTrunk/playerMaxTrunk), 1015, GetColor(0, 255, 0), TRUE);			//プレイヤーの体幹ゲージ
+	DrawBox(985, 90, 980 + 750 * (enemyTrunk/enemyMaxTrunk), 110, GetColor(246, 200 - subGreen, 0), TRUE);				//エネミーの右側体幹ゲージ
+	DrawBox(975, 90, 980 + 750 * (-enemyTrunk / enemyMaxTrunk), 110, GetColor(246, 200 - subGreen, 0), TRUE);			//エネミーの左側体幹ゲージ
 
 
 	//ゲージの枠を表示
-	DrawRotaGraph(950, 1000, 0.8, 0.0, imageHandle[PLAYER_TRUNK], TRUE);	//プレイヤー体幹ゲージ枠
-	DrawRotaGraph(980, 100, 0.8, 0.0, imageHandle[ENEMY_TRUNK], TRUE);		//エネミー体幹ゲージ枠
+	//DrawRotaGraph(950, 1000, 0.8, 0.0, imageHandle[PLAYER_TRUNK], TRUE);	//プレイヤー体幹ゲージ枠
+	DrawRotaGraph(957, 100, 0.8, 0.0, imageHandle[ENEMY_TRUNK], TRUE);		//エネミー体幹ゲージ枠
 
+}
+
+/// <summary>
+/// 回復アイコン描画
+/// </summary>
+void UiManager::DrawRecoveryIcon()
+{
+	DrawRotaGraph(80, 960, 0.5, 0.0, imageHandle[RECOVERY], TRUE);
 }
 
 void UiManager::DrawTitle()

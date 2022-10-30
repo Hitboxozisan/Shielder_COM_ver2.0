@@ -96,11 +96,11 @@ void EffectManager::Deactivate()
 	}
 }
 
-void EffectManager::Update(VECTOR inPostion)
+void EffectManager::Update(VECTOR inPostion, VECTOR inEnemyPosition)
 {
 	for (int i = 0; i < EFFECT_AMOUNT; ++i)
 	{
-		effects[i]->Update(inPostion);
+		effects[i]->Update(inPostion, inEnemyPosition);
 	}
 
 	for (int i = 0; i < BILLBOARD_AMOUNT; ++i)

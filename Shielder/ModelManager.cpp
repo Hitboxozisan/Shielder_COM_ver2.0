@@ -3,8 +3,8 @@
 
 const string ModelManager::MODEL_FOLDER_PATH = "Data/Model/";
 const string ModelManager::FIELD_PATH = "Field/TestField.mv1";
-const string ModelManager::PLAYER_PATH = "Player/TestPlayer.mv1";
-const string ModelManager::ENEMY_PATH = "Enemy/TestEnemy.mv1";
+const string ModelManager::PLAYER_PATH = "Player/Player.mv1";
+const string ModelManager::ENEMY_PATH = "Enemy/Enemy.mv1";
 const string ModelManager::SHIELD_PATH = "Shield/Shield.mv1";
 const string ModelManager::BULLET_PATH = "Bullet/Bullet.mv1";
 

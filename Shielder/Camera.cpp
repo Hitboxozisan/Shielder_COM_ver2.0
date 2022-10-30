@@ -66,6 +66,8 @@ void Camera::SetPosition(Character** character)
 
 	// 算出した座標に注視点の位置を加算したものがカメラの位置
 	position = VAdd(tempPosition2, targetPosition);
+	mainCameraPosition = position;					//カメラの最終位置を設定
+
 	/*position.x = (character[1]->GetPosition().x - character[0]->GetPosition().x ) / 2;*/
 	
 	// カメラの設定に反映する
@@ -73,6 +75,9 @@ void Camera::SetPosition(Character** character)
 	//DXライブラリのカメラとEffekseerのカメラを同期する
 	Effekseer_Sync3DSetting();
 	
+	//カメラ位置をプレイヤーとエネミーの間に設置
+	//position = character[1]->GetPosition() - character[0]->GetPosition();
+	//position.x = position.x / 2;
 
 	//setcamerapositionandangle()		//使うとよい
 }
@@ -121,7 +126,7 @@ void Camera::Finalize()
 //ゲーム開始時にカメラを所定の位置まで移動させる
 void Camera::StartCamera(Character** character)
 {
-
+	
 }
 
 //プレイヤーにズームする

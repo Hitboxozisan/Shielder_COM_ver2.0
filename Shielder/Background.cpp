@@ -20,6 +20,10 @@ void Background::Initialize()
 	position = INITIAL_POSITION;
 }
 
+void Background::Update()
+{
+}
+
 void Background::Draw()
 {
 	DrawGraph(position.x, position.y, img, TRUE);

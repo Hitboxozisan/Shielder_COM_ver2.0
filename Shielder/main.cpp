@@ -6,6 +6,7 @@
 #include "ModelManager.h"
 #include "KeyManager.h"
 #include "SceneManager.h"
+#include "SoundManager.h"
 #include "DeltaTime.h"
 
 
@@ -82,6 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		prevCount = nowCount;
 		DeltaTime::GetInstace().SetDeltaTime(deltaTime);
 		KeyManager::GetInstance().Update();		//入力処理
+		SoundManager::GetInstance().Update();
 		sceneManager->Update();					//各シーンに応じた更新処理
 		
 		//画面更新処理
@@ -90,15 +92,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 		sceneManager->Draw();					//各シーンに応じた描画処理
 		//fps->Draw();							//フレームレート描画
-		DrawFormatString(300, 300, GetColor(255, 255, 255), "Getdelta : %f", DeltaTime::GetInstace().GetDeltaTime());
-		DrawFormatString(300, 320, GetColor(255, 255, 255), "delta : %f", deltaTime);
 
 #ifdef DEBUG
 		
 #endif // DEBUG
 
 		// 位置関係が分かるように地面にラインを描画する
-		{
+		/*{
 			int i;
 			VECTOR Pos1;
 			VECTOR Pos2;
@@ -124,7 +124,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			}
 
 			SetUseZBufferFlag(FALSE);
-		}
+		}*/
 
 		ScreenFlip();
 		//fps->Wait();					//待機

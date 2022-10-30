@@ -2,6 +2,8 @@
 
 #include "PlayerLaserEffect.h"
 
+using namespace My3dLib;
+
 PlayerLaserEffect::PlayerLaserEffect()
 {
 }
@@ -36,7 +38,6 @@ void PlayerLaserEffect::Activate(VECTOR inPosition)
 	position.z = 0.0f;
 	playingEffectHandle = -1;
 
-	SpecificEnemyPosition(inPosition);
 }
 
 void PlayerLaserEffect::Deactivate()
@@ -44,7 +45,7 @@ void PlayerLaserEffect::Deactivate()
 	exist = false;
 }
 
-void PlayerLaserEffect::Update(VECTOR inPostion)
+void PlayerLaserEffect::Update(VECTOR inPostion, VECTOR inEnemyPosition)
 {
 	//存在しないなら処理しない
 	if (exist == false)
@@ -58,6 +59,7 @@ void PlayerLaserEffect::Update(VECTOR inPostion)
 	{
 		playingEffectHandle = PlayEffekseer3DEffect(effectHandle);			//エフェクトを再生する
 		SetSpeedPlayingEffekseer3DEffect(playingEffectHandle, 0.2);			//エフェクトの再生速度を設定する
+		SpecificEnemyPosition(inPostion, inEnemyPosition);									//発射角度を設定
 		//SetRotationPlayingEffekseer3DEffect(playingEffectHandle, 0, 90, 0);
 		
 	}
@@ -69,9 +71,11 @@ void PlayerLaserEffect::Update(VECTOR inPostion)
 	}
 
 	//エフェクトを再生し終わったら
-	if (frame >= 1000)
+	if (frame >= 800)
 	{
-		Deactivate();
+		//エフェクトを停止する
+		StopEffekseer3DEffect(playingEffectHandle);
+		//Deactivate();
 	}
 
 	SetPosPlayingEffekseer3DEffect(playingEffectHandle, position.x, position.y, position.z);
@@ -90,7 +94,28 @@ void PlayerLaserEffect::Draw()
 
 //エネミーの位置を特定
 //レーザーを発射する位置を角度
-void PlayerLaserEffect::SpecificEnemyPosition(VECTOR inPosition)
+void PlayerLaserEffect::SpecificEnemyPosition(VECTOR inPosition, VECTOR inEnemyPosition)
 {
+	inPosition.z = 0.0f;
+	inEnemyPosition.z = 0.0f;
+
+	//二つのベクトルの絶対値
+	float absoluteValue1 = VSquareSize(inPosition);
+	float absoluteValue2 = VSquareSize(inEnemyPosition);
+	
+	//内積の計算
+	float innerProduct = VDot(inPosition, inEnemyPosition);
+
+	absoluteValue1 = absoluteValue1 / 10000;
+	absoluteValue2 = absoluteValue2 / 10000;
+	float absoluteValue = absoluteValue1 * absoluteValue2;
+
+	innerProduct = innerProduct / 10000;
+
+	//打ち出す角度を計算
+	float rad = static_cast<float>((innerProduct / absoluteValue));
+	rad *= 10000;
+
+	SetRotationPlayingEffekseer3DEffect(playingEffectHandle, 0.0f, 0.0f, 0.0f);
 	return;
 }

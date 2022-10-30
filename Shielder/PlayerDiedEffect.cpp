@@ -41,7 +41,7 @@ void PlayerDiedEffect::Deactivate()
 	exist = false;
 }
 
-void PlayerDiedEffect::Update(VECTOR inPostion)
+void PlayerDiedEffect::Update(VECTOR inPostion, VECTOR inEnemyPosition)
 {
 	//ë∂ç›ÇµÇ»Ç¢Ç»ÇÁèàóùÇµÇ»Ç¢
 	if (exist == false)

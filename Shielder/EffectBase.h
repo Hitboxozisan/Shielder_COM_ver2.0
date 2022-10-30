@@ -7,9 +7,9 @@ public:
 
 	virtual void Initialize() = 0;
 	virtual void Finalize() = 0;
-	virtual void Activate(VECTOR inPosition) = 0;
+	virtual void Activate(VECTOR inPosition) = 0;		//à¯êîÇÇ«Ç§Ç…Ç©ÇµÇΩÇ¢
 	virtual void Deactivate() = 0;
-	virtual void Update(VECTOR inPostion) = 0;
+	virtual void Update(VECTOR inPostion, VECTOR inEnemyPosition) = 0;
 	virtual void Draw() = 0;
 
 	bool GetExist() const;			//ë∂ç›ÇµÇƒÇ¢ÇÈÇ©Ç«Ç§Ç©

@@ -6,6 +6,10 @@
 
 class Character;
 
+/// <summary>
+/// Resultクラス現在不使用
+/// GameMainにて別途Result作成
+/// </summary>
 class Result final : public SceneBase
 {
 public:

@@ -25,7 +25,7 @@ public:
 	void Finalize();
 	void Activate(VECTOR inPosition);
 	void Deactivate();
-	void Update(VECTOR inPostion);
+	void Update(VECTOR inPostion, VECTOR inEnemyPosition);
 	void Draw(const VECTOR& inPosition);
 
 	void CreateSparkEffect(const VECTOR& inPosition);		//âŒâ‘Çê∂ê¨Ç∑ÇÈ

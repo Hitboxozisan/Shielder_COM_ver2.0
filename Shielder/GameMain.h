@@ -79,10 +79,13 @@ private:
 
 	int fontHandle;						//フォント用ハンドル
 	int resultImageHandle;				//リザルト画面画像
+	int pushEnterHandle;				//リザルト画面画像
 	int lifeScore;
-	int destroyScore;
+	int trunkScore;
 	int totalScore;
 	int frame;							//経過フレーム
 
 	int alpha;							//ALPHA値（テスト）
+	int pushEnterAlpha;
+	int alphaAdd;
 };

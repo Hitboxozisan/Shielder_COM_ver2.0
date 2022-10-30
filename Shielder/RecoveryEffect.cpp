@@ -41,7 +41,7 @@ void RecoveryEffect::Deactivate()
 	exist = false;
 }
 
-void RecoveryEffect::Update(VECTOR inPosition)
+void RecoveryEffect::Update(VECTOR inPosition, VECTOR inEnemyPosition)
 {
 	//ë∂ç›ÇµÇ»Ç¢Ç»ÇÁèàóùÇµÇ»Ç¢
 	if (exist == false)

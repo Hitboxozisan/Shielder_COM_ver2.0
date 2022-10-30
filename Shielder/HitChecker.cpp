@@ -7,6 +7,7 @@
 #include "Enemy.h"
 #include "Shield.h"
 #include "Bullet.h"
+#include "SoundManager.h"
 
 HitChecker::HitChecker(int inCharacaterAmount)
 	:characterAmount(inCharacaterAmount)
@@ -55,6 +56,7 @@ void HitChecker::ShieldAndCharacter(Character** character, Shield *shield)
 			character[1]->GetPosition(), character[1]->GetCollisionRadius()) &&
 			character[0]->IsCollidableState())
 		{
+			SoundManager::GetInstance().SetSePlayFlag(SoundManager::SHIELD_HIT);
 			//printfDx("HitShield");
 			sub = VScale(sub, 1.0f);				//‚«”ò‚Î‚·•ûŒü‚Í‹t•ûŒü
 			VECTOR forceDirection = VNorm(sub);
@@ -86,6 +88,7 @@ void HitChecker::CharacterAndCharacter(Character** character)
 		character[1]->GetPosition(), character[1]->GetCollisionRadius()) &&
 		character[0]->IsCollidableState())
 	{
+		SoundManager::GetInstance().SetSePlayFlag(SoundManager::CHARACTER_HIT);
 		sub = VScale(sub, 1.0f);		//‚«”ò‚Î‚·•ûŒü‚Í‹t•ûŒü
 		VECTOR forceDirection = VNorm(sub);
 		character[0]->OnHitOtherCharacter(forceDirection, character[0]->IsJust());
@@ -121,6 +124,7 @@ void HitChecker::ShieldAndBullet(Character** character, Shield* shield, std::lis
 				(*itr)->GetPosition(), (*itr)->GetCollisionRadius()) &&
 				character[0]->IsCollidableState() && (*itr)->IsCollidableState())
 			{
+				SoundManager::GetInstance().SetSePlayFlag(SoundManager::SHIELD_HIT);
 				sub = VScale(sub, 1.0f);		//‚«”ò‚Î‚·•ûŒü‚Í‹t•ûŒü
 				VECTOR forceDirection = VNorm(sub);
 				character[0]->OnHitShield(forceDirection, character[0]->IsJust());
@@ -158,6 +162,7 @@ void HitChecker::CharacterAndBullet(Character** character, std::list<Bullet*>* b
 				(*itr)->GetPosition(), (*itr)->GetCollisionRadius()) &&
 				character[0]->IsCollidableState() && (*itr)->IsCollidableState())
 			{
+				SoundManager::GetInstance().SetSePlayFlag(SoundManager::BULLET_HIT);
 				sub = VScale(sub, 1.0f);		//‚«”ò‚Î‚·•ûŒü‚Í‹t•ûŒü
 				VECTOR forceDirection = VNorm(sub);
 				character[0]->OnHitOtherCharacter(forceDirection, character[0]->IsJust());

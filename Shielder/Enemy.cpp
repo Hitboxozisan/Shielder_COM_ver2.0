@@ -61,6 +61,16 @@ Enemy::~Enemy()
 
 void Enemy::Initialize(EffectManager* const inEffectManager)
 {
+	modelHandle = MV1DuplicateModel(ModelManager::GetInstance().GetModelHandle(ModelManager::ENEMY));
+	//読み込み失敗でエラー
+	if (modelHandle < 0)
+	{
+		printfDx("モデルデータの読み込み_Enemy\n");
+	}
+	//モデルサイズ変更
+	MV1SetScale(modelHandle, VGet(0.4f, 0.4f, 0.4f));
+
+
 	vec = LEFT;
 	speed = NORMAL_SPEED;
 	trunkPoint = 0;
@@ -78,15 +88,6 @@ void Enemy::Initialize(EffectManager* const inEffectManager)
 
 	pUpdate = &Enemy::UpdateAttack;
 
-	modelHandle = MV1DuplicateModel(ModelManager::GetInstance().GetModelHandle(ModelManager::ENEMY));
-	//読み込み失敗でエラー
-	if (modelHandle < 0)
-	{
-		printfDx("モデルデータの読み込み_Enemy\n");
-	}
-
-	MV1SetScale(modelHandle, VGet(0.5f, 0.5f, 0.5f));
-
 	//当たり判定球を設定
 	collisionSphere.localCenter = VGet(0.0f, 0.0f, 0.0f);
 	collisionSphere.radius = COLLIDE_RADIUS;
@@ -103,6 +104,8 @@ void Enemy::Update()
 
 #endif // DEBUG
 
+	//現在の残り体力に応じて行動変化
+	//現在はFINEのみ
 	if (this->pUpdate != nullptr)
 	{
 		switch (physical)
@@ -251,12 +254,7 @@ void Enemy::MoveFinish()
 	//位置を設定
 	MV1SetPosition(modelHandle, position);
 
-	//移動キーを押していない場合は向きを固定する
-	if (!VSquareSize(inputDirection) == 0.0f)
-	{
-		MV1SetRotationYUseDir(modelHandle, direction, 0.0f);
-	}
-
+	MV1SetRotationYUseDir(modelHandle, direction, 0.0f);
 }
 
 /// <summary>
@@ -320,7 +318,7 @@ void Enemy::Bullet()
 		shotInterval = 0.0f;	//インターバルをリセット
 		shotCount++;			//発射回数を増加
 	}
-	if (shotCount == 4)
+	if (shotCount == 3)
 	{
 		attackType = JUDGE;		//判断処理に移る
 	}
@@ -362,7 +360,7 @@ void Enemy::Jump()
 		jumpPower = ZERO_VECTOR;
 		frame++;
 		//規定フレーム経過したら
-		if (frame >= 60.0f)
+		if (frame >= 30.0f)
 		{
 			attackType = KICK;			//次の状態に移行する
 		}
@@ -502,7 +500,7 @@ void Enemy::SetNextAttack()
 	//乱数用変数
 	std::random_device rd;
 	std::mt19937 eng(rd());
-	std::uniform_int_distribution<int> next(0, ATTACK_AMOUST - 2);
+	std::uniform_int_distribution<int> next(0, ATTACK_AMOUST - 3);
 	int nextAttack;
 	AttackType at;
 
@@ -518,7 +516,7 @@ void Enemy::SetNextAttack()
 	return;*/
 
 	//前回の行動がSLOW_BULLETかつ規定数撃っていない場合
-	if (prevType == SLOW_BULLET && shotCount <= 3.0f)
+	if (prevType == SLOW_BULLET && shotCount < 3.0f)
 	{
 		attackType = SLOW_BULLET;
 	}
@@ -623,6 +621,8 @@ void Enemy::UpdateAttack()
 	{
 		prevType = attackType;
 	}
+
+	MoveFinish();
 
 	//各行動パターンに応じた行動処理
 	switch (attackType)

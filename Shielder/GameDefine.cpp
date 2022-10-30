@@ -9,8 +9,8 @@ const bool IS_WINDOW_MODE = false;
 const int  SCREEN_WIDTH = 1920;						//ウィンドウの幅
 const int  SCREEN_HEIGHT = 1080;					//ウィンドウの高さ
 
-const int SCREEN_LEFTMOST = 1100;					//画面左端座標
-const int SCREEN_RIGHTMOST = 2900;					//画面右端座標
+const int SCREEN_LEFTMOST = 1150;					//画面左端座標
+const int SCREEN_RIGHTMOST = 2850;					//画面右端座標
 
 const int SCREEN_CENTER = (SCREEN_RIGHTMOST - SCREEN_LEFTMOST) / 2;	//画面中心座標
 

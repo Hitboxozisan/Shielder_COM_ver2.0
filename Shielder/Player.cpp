@@ -7,6 +7,7 @@
 #include "EffectManager.h"
 #include "ModelManager.h"
 #include "KeyManager.h"
+#include "SoundManager.h"
 #include "DeltaTime.h"
 
 using namespace My3dLib;
@@ -65,6 +66,8 @@ void Player::Initialize(EffectManager* const inEffectManager)
 	{
 		printfDx("モデルデータの読み込み_Player\n");
 	}
+	//モデルサイズ変更
+	MV1SetScale(modelHandle, VGet(0.4f, 0.4f, 0.4f));
 
 	state = NORMAL;
 	pUpdate = &Player::UpdateNormal;
@@ -88,7 +91,7 @@ void Player::Initialize(EffectManager* const inEffectManager)
 
 	//位置を設定
 	MV1SetPosition(modelHandle, position);
-	MV1SetScale(modelHandle, VGet(0.5f, 0.5f, 0.5f));
+	
 
 	//当たり判定球を設定
 	collisionSphere.localCenter = VGet(0.0f, 0.0f, 0.0f);
@@ -122,8 +125,10 @@ void Player::Update()
 	//体力が尽きたら死亡する
 	if (hitPoint <= 0.0f)
 	{
+		SoundManager::GetInstance().StopBgm();
 		WaitTimer(1000);									//一秒止める
 		effectManager->CreatePlayerDiedEffect(position);	//死亡エフェクトを再生
+		SoundManager::GetInstance().SetSePlayFlag(SoundManager::PLAYER_DIE);
 		state = DEAD;
 	}
 }
@@ -192,6 +197,10 @@ void Player::OnHitOtherCharacter(const VECTOR& forceDirection, bool just)
 
 	velocity = VAdd(velocity, force);
 	hitPoint -= DECREMENT_HIT_POINT;		//体力を減少させる
+	if (hitPoint <= 0.0f)
+	{
+		hitPoint = 0.0f;
+	}
 	state = DAMAGE;
 	pUpdate = &Player::UpdateDamage;
 }
@@ -496,9 +505,9 @@ void Player::InputAction()
 	}
 
 	//回復
-	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_SPACE))
+	if (KeyManager::GetInstance().CheckPressed(KEY_INPUT_R))
 	{
-		
+		Recovery();
 	}
 	
 }
